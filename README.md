@@ -275,6 +275,95 @@ To use this MCP server with Cursor:
 
 For detailed instructions and troubleshooting, see [MCP_TESTING.md](./MCP_TESTING.md).
 
+## Deploying to Vercel
+
+This MCP server can be deployed to Vercel as a serverless function, allowing it to be accessed via HTTP instead of stdio.
+
+### Prerequisites
+
+- A Vercel account
+- Vercel CLI installed (optional, for local testing)
+
+### Deployment Steps
+
+1. **Install Vercel CLI** (if not already installed):
+
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Set up environment variables in Vercel**:
+
+   - Go to your Vercel project settings
+   - Navigate to Environment Variables
+   - Add the following variables:
+     - `AROBID_BACKEND_URL` (required)
+     - `AROBID_API_KEY` (optional)
+     - `AROBID_TENANT_ID` (optional)
+
+3. **Deploy to Vercel**:
+
+   ```bash
+   vercel
+   ```
+
+   Or connect your GitHub repository to Vercel for automatic deployments.
+
+4. **Get your MCP server URL**:
+
+   After deployment, you'll get a URL like `https://your-project.vercel.app`. The MCP endpoint will be available at:
+   ```
+   https://your-project.vercel.app/api/mcp
+   ```
+
+### Configuring MCP Clients for Vercel Deployment
+
+#### For Cursor
+
+Update your `.cursor/mcp.json` configuration to use the HTTP transport:
+
+```json
+{
+  "mcpServers": {
+    "arobid": {
+      "url": "https://your-project.vercel.app/api/mcp"
+    }
+  }
+}
+```
+
+#### For Other MCP Clients
+
+Use the Streamable HTTP transport format with your Vercel deployment URL:
+
+```
+https://your-project.vercel.app/api/mcp
+```
+
+### Testing the Vercel Deployment
+
+You can test your deployed MCP server using the MCP Inspector:
+
+```bash
+pnpm dlx @modelcontextprotocol/inspector@latest http://your-project.vercel.app/api/mcp undefined
+```
+
+Then:
+1. Open `http://127.0.0.1:6274` in your browser
+2. Select "Streamable HTTP" in the dropdown
+3. Enter your Vercel URL: `https://your-project.vercel.app/api/mcp`
+4. Click "Connect"
+
+### Local Development with Vercel
+
+To test the Vercel integration locally:
+
+```bash
+vercel dev
+```
+
+This will start a local server that mimics Vercel's serverless environment.
+
 ## TODO / Known Limitations
 
 The following items need to be configured based on actual Arobid Backend API:
