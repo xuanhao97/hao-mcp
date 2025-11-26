@@ -176,19 +176,67 @@ export class ArobidClient {
 }
 
 /**
- * Creates an ArobidClient instance from environment variables
+ * Configuration options for creating an ArobidClient
+ * Values provided here will override process.env
  */
-export function createArobidClient(): ArobidClient {
-  const baseUrl = process.env.AROBID_BACKEND_URL;
+export interface CreateArobidClientOptions {
+  baseUrl?: string;
+  apiKey?: string;
+  tenantId?: string;
+}
+
+/**
+ * Creates an ArobidClient instance from environment variables or provided options
+ * @param options - Optional configuration that overrides process.env values
+ */
+export function createArobidClient(options?: CreateArobidClientOptions): ArobidClient {
+  // Use provided options or fall back to process.env
+  const baseUrl = options?.baseUrl || process.env.AROBID_BACKEND_URL;
   if (!baseUrl) {
     throw new Error(
-      'AROBID_BACKEND_URL environment variable is required. Please set it in your .env file or environment.'
+      'AROBID_BACKEND_URL is required. Please provide it via options, headers (X-Arobid-Backend-Url), or set AROBID_BACKEND_URL environment variable.'
     );
   }
 
   return new ArobidClient({
     baseUrl,
-    apiKey: process.env.AROBID_API_KEY,
-    tenantId: process.env.AROBID_TENANT_ID,
+    apiKey: options?.apiKey || process.env.AROBID_API_KEY,
+    tenantId: options?.tenantId || process.env.AROBID_TENANT_ID,
   });
+}
+
+/**
+ * Extracts Arobid configuration from HTTP request headers
+ * Supports the following headers:
+ * - X-Arobid-Backend-Url (or x-arobid-backend-url)
+ * - X-Arobid-Api-Key (or x-arobid-api-key)
+ * - X-Arobid-Tenant-Id (or x-arobid-tenant-id)
+ */
+export function extractConfigFromHeaders(headers: Headers | Record<string, string>): CreateArobidClientOptions {
+  const getHeader = (name: string, altName?: string): string | undefined => {
+    if (headers instanceof Headers) {
+      return headers.get(name) || headers.get(altName || name.toLowerCase()) || undefined;
+    }
+    // Handle Record<string, string> case
+    return headers[name] || headers[altName || name.toLowerCase()] || undefined;
+  };
+
+  const config: CreateArobidClientOptions = {};
+
+  const baseUrl = getHeader('X-Arobid-Backend-Url', 'x-arobid-backend-url');
+  if (baseUrl) {
+    config.baseUrl = baseUrl;
+  }
+
+  const apiKey = getHeader('X-Arobid-Api-Key', 'x-arobid-api-key');
+  if (apiKey) {
+    config.apiKey = apiKey;
+  }
+
+  const tenantId = getHeader('X-Arobid-Tenant-Id', 'x-arobid-tenant-id');
+  if (tenantId) {
+    config.tenantId = tenantId;
+  }
+
+  return config;
 }
