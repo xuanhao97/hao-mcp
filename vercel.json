@@ -4,7 +4,7 @@
   "framework": null,
   "functions": {
     "api/mcp/route.ts": {
-      "runtime": "@vercel/node"
+      "runtime": "nodejs20.x"
     }
   }
 }
