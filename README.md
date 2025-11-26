@@ -11,6 +11,7 @@ Arobid MCP provides a standardized interface for interacting with Arobid Backend
 - ✅ **Create Personal Account** - Register new user accounts via Arobid Backend
 - ✅ **User Login** - Login to retrieve a new OTP when the previous one has expired
 - ✅ **Verify User** - Verify user account using OTP code sent to email
+- ✅ **Resend OTP** - Resend OTP code to user email when verification fails or OTP expires
 - 🔄 More tools coming soon (profile updates, etc.)
 
 ## Tech Stack
@@ -121,6 +122,7 @@ arobid-mcp/
 │   └── tools/
 │       ├── createPersonalAccount.ts  # Create account tool
 │       ├── userLogin.ts         # User login tool
+│       ├── resendOtp.ts         # Resend OTP tool
 │       └── verifyUser.ts        # Verify user tool
 ├── dist/                        # Compiled JavaScript (generated)
 ├── package.json
@@ -178,6 +180,24 @@ Performs user login in Arobid Backend. This can be used to retrieve a new OTP wh
 
 **Note**: After successful login, a new OTP will be sent to the user's email. Use this tool when you need to retrieve a fresh OTP after the previous one has expired.
 
+### `resendOtp`
+
+Resends OTP code to user email in Arobid Backend. Use this when verifyUser fails due to expired or invalid OTP.
+
+**Parameters:**
+
+- `userEmail` (string, required): User email address
+
+**Example:**
+
+```json
+{
+  "userEmail": "user@example.com"
+}
+```
+
+**Note**: After calling this tool, a new OTP will be sent to the user's email. Use this tool when verification fails or the OTP has expired, instead of using `userLogin`.
+
 ### `verifyUser`
 
 Verifies a user account in Arobid Backend using the OTP code sent to the user email.
@@ -196,7 +216,7 @@ Verifies a user account in Arobid Backend using the OTP code sent to the user em
 }
 ```
 
-**Note**: The OTP in this example is for demonstration only. In production, use the actual OTP code sent to the user's email. If the OTP has expired, use `userLogin` to retrieve a new one.
+**Note**: The OTP in this example is for demonstration only. In production, use the actual OTP code sent to the user's email. If the OTP has expired or verification fails, use `resendOtp` to get a new OTP code, or use `userLogin` to retrieve a new one via login.
 
 ## MCP Server Integration
 
