@@ -9,8 +9,8 @@
 
 import { createMcpHandler } from 'mcp-handler';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { createArobidClient, extractConfigFromHeaders, ArobidClient } from '../../src/client/arobidClient.js';
-import { registerTools } from '../../src/server/registerTools.js';
+import { createArobidClient, extractConfigFromHeaders, ArobidClient } from '../src/client/arobidClient.js';
+import { registerTools } from '../src/server/registerTools.js';
 
 // Try to initialize a default client from process.env (for backward compatibility)
 let defaultClient: ArobidClient | undefined;
