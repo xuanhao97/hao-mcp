@@ -209,24 +209,7 @@ The server includes comprehensive error handling:
 
 ### Local Testing
 
-Test the MCP server locally using the included test script:
-
-```bash
-# Build the project first
-npm run build
-
-# Run the test script
-npm run test:mcp
-```
-
-The test script will:
-
-- Start the MCP server
-- Send `tools/list` request to list available tools
-- Send `tools/call` request to test `createPersonalAccount`
-- Display all responses
-
-### Using MCP Inspector (Recommended)
+Test the MCP server locally using the MCP Inspector (recommended):
 
 For a better testing experience, use the MCP Inspector:
 
@@ -326,7 +309,10 @@ Update your `.cursor/mcp.json` configuration to use the HTTP transport:
 {
   "mcpServers": {
     "arobid": {
-      "url": "https://your-project.vercel.app/api/mcp"
+      "url": "https://your-project.vercel.app/api/mcp",
+      "headers":{
+       "X-Arobid-Backend-Url": "https://gw-stg.arobid.site/b2b"
+      }
     }
   }
 }
