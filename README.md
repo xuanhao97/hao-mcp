@@ -13,6 +13,7 @@ Arobid MCP provides a standardized interface for interacting with Arobid Backend
 - ✅ **Verify User** - Verify user account using OTP code sent to email
 - ✅ **Resend OTP** - Resend OTP code to user email when verification fails or OTP expires
 - ✅ **Check Reset Password** - Initiate password reset process by sending reset link/OTP to user email
+- ✅ **Confirm Reset Password** - Confirm password reset using OTP sent to email after checkResetPassword
 - 🔄 More tools coming soon (profile updates, etc.)
 
 ## Tech Stack
@@ -125,6 +126,7 @@ arobid-mcp/
 │       ├── userLogin.ts         # User login tool
 │       ├── resendOtp.ts         # Resend OTP tool
 │       ├── checkResetPassword.ts # Check/reset password tool
+│       ├── confirmResetPassword.ts # Confirm reset password tool
 │       └── verifyUser.ts        # Verify user tool
 ├── dist/                        # Compiled JavaScript (generated)
 ├── package.json
@@ -217,6 +219,28 @@ Initiates password reset process in Arobid Backend. This will send a reset link 
 ```
 
 **Note**: After calling this tool, a password reset link or OTP will be sent to the user's email. Use this tool when a user needs to reset their forgotten password.
+
+### `confirmResetPassword`
+
+Confirms password reset in Arobid Backend using the OTP sent to user email. Use this after `checkResetPassword` succeeds.
+
+**Parameters:**
+
+- `email` (string, required): User email address
+- `password` (string, required): New password (6-20 characters with complexity requirements)
+- `otp` (string, required): One-time password (OTP) code - exactly 6 digits
+
+**Example:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "NewSecurePass123!",
+  "otp": "123456"
+}
+```
+
+**Note**: Use this tool after `checkResetPassword` succeeds. The OTP code will be sent to the user's email when `checkResetPassword` is called. The password must meet complexity requirements (lowercase, uppercase, numbers, and special characters).
 
 ### `verifyUser`
 
