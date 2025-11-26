@@ -1,6 +1,14 @@
 /**
  * MCP tool for checking/resetting password in Arobid Backend
- * This initiates the password reset process by sending a reset link/OTP to the user's email
+ * This initiates the password reset or change password process by sending a reset link/OTP to the user's email.
+ * 
+ * Use cases:
+ * 1. Password Reset: When a user has forgotten their password and needs to reset it
+ * 2. Change Password: When a user wants to change their existing password for security reasons
+ * 
+ * Both scenarios follow the same flow:
+ * - This tool sends an OTP to the user's email
+ * - Use confirmResetPassword to complete the process with the new password and OTP
  */
 
 import { ArobidClient, ArobidError } from '../client/arobidClient.js';
@@ -41,8 +49,14 @@ function validateInput(input: unknown): CheckResetPasswordInput {
 }
 
 /**
- * Initiates password reset process via Arobid Backend
- * This will send a reset link or OTP to the user's email
+ * Initiates password reset or change password process via Arobid Backend
+ * This will send a reset link or OTP to the user's email.
+ * 
+ * Supports both scenarios:
+ * - Password reset (when user forgot password)
+ * - Change password (when user wants to update existing password)
+ * 
+ * After calling this, use confirmResetPassword with the OTP received via email to complete the process.
  */
 export async function checkResetPassword(
   client: ArobidClient,

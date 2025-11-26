@@ -18,9 +18,9 @@ The server currently provides **6 comprehensive tools** covering account managem
 - ✅ **User Login** - Login to retrieve a new OTP when the previous one has expired
 - ✅ **Resend OTP** - Resend OTP code to user email when verification fails or OTP expires
 
-### Password Reset
-- ✅ **Check Reset Password** - Initiate password reset process by sending reset link/OTP to user email
-- ✅ **Confirm Reset Password** - Confirm password reset using OTP sent to email after checkResetPassword
+### Password Reset & Change Password
+- ✅ **Check Reset Password** - Initiate password reset (forgot password) or change password (update existing) process by sending reset link/OTP to user email. Supports both scenarios with the same workflow.
+- ✅ **Confirm Reset Password** - Confirm password reset/change using OTP sent to email after checkResetPassword
 
 ### Coming Soon
 - 🔄 Profile management tools
@@ -167,10 +167,18 @@ arobid-mcp/
 3. Use `verifyUser` with the OTP to complete account verification
 4. If OTP expires, use `resendOtp` or `userLogin` to get a new one
 
-#### Password Reset Workflow
+#### Password Reset & Change Password Workflow
+**Use Case 1: Password Reset (Forgot Password)**
 1. Use `checkResetPassword` with user email to initiate password reset
 2. Check email for OTP code
 3. Use `confirmResetPassword` with email, new password, and OTP to complete the reset
+
+**Use Case 2: Change Password (Update Existing Password)**
+1. Use `checkResetPassword` with user email to initiate password change
+2. Check email for OTP code
+3. Use `confirmResetPassword` with email, new password, and OTP to complete the change
+
+Both scenarios follow the same workflow - the tool automatically handles both reset and change password requests.
 
 #### OTP Recovery Workflow
 - If OTP expires during verification: Use `resendOtp` to get a new OTP
@@ -246,7 +254,11 @@ Resends OTP code to user email in Arobid Backend. Use this when verifyUser fails
 
 ### `checkResetPassword`
 
-Initiates password reset process in Arobid Backend. This will send a reset link or OTP to the user's email.
+Initiates password reset or change password process in Arobid Backend. This will send a reset link or OTP to the user's email.
+
+**Use Cases:**
+- **Password Reset**: When a user has forgotten their password and needs to reset it
+- **Change Password**: When a user wants to change their existing password for security reasons
 
 **Parameters:**
 
@@ -260,7 +272,7 @@ Initiates password reset process in Arobid Backend. This will send a reset link 
 }
 ```
 
-**Note**: After calling this tool, a password reset link or OTP will be sent to the user's email. Use this tool when a user needs to reset their forgotten password.
+**Note**: After calling this tool, a password reset link or OTP will be sent to the user's email. Use this tool for both scenarios: (1) when a user needs to reset their forgotten password, or (2) when a user wants to change their existing password. The tool automatically handles both cases. After receiving the OTP, use `confirmResetPassword` to complete the process.
 
 ### `confirmResetPassword`
 

@@ -16,9 +16,11 @@ export function registerCheckResetPassword(server: McpServer, client: ArobidClie
   server.registerTool(
     'checkResetPassword',
     {
-      title: 'Check Reset Password',
+      title: 'Check Reset Password / Change Password',
       description:
-        'Initiates password reset process in Arobid Backend. This will send a reset link or OTP to the user\'s email. Requires email.',
+        'Initiates password reset or change password process in Arobid Backend. This will send a reset link or OTP to the user\'s email. ' +
+        'Use this tool for both scenarios: (1) Password reset when user forgot their password, or (2) Change password when user wants to update their existing password. ' +
+        'After calling this tool, an OTP will be sent to the user\'s email. Use confirmResetPassword to complete the process with the new password and OTP. Requires email.',
       inputSchema: {
         email: z.string().email().describe('User email address (must be valid email format)'),
       },
