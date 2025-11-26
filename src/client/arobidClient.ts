@@ -120,6 +120,26 @@ export class ArobidClient {
   }
 
   /**
+   * Performs a POST request and returns the response body even if status is not ok
+   * Useful for cases where error responses contain important information
+   */
+  async postWithErrorBody<T>(path: string, data: unknown): Promise<{ body: T; status: number; ok: boolean }> {
+    const url = `${this.baseUrl}${path}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    const body = await response.json() as T;
+    return {
+      body,
+      status: response.status,
+      ok: response.ok,
+    };
+  }
+
+  /**
    * Performs a PUT request
    */
   async put<T>(path: string, data: unknown): Promise<T> {

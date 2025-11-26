@@ -3,7 +3,7 @@
  * This can be used to retrieve a new OTP when the previous one has expired
  */
 
-import { ArobidClient, ArobidError } from '../client/arobidClient.js';
+import { ArobidClient } from '../client/arobidClient.js';
 
 /**
  * Input parameters for user login
@@ -17,7 +17,10 @@ export interface UserLoginInput {
  * Response from Arobid Backend after user login
  */
 export interface UserLoginResponse {
-  // TODO: Update with actual response structure from Arobid Backend API
+  data: unknown | null;
+  errorMessage?: string;
+  errorCode?: number;
+  isSucceeded: boolean;
   [key: string]: unknown;
 }
 
@@ -63,59 +66,72 @@ export async function userLogin(
   // Validate input
   const validatedInput = validateInput(input);
 
-  try {
-    const endpoint = '/api/user/user_login';
+  const endpoint = '/api/user/user_login';
 
-    // Prepare request payload matching the API structure
-    const payload = {
-      email: validatedInput.email,
-      password: validatedInput.password,
-    };
+  // Prepare request payload matching the API structure
+  const payload = {
+    email: validatedInput.email,
+    password: validatedInput.password,
+  };
 
-    // Log request details (without password)
-    console.error(
-      `[userLogin] API Request:\n` +
-        `  Endpoint: ${endpoint}\n` +
-        `  Payload: ${JSON.stringify({ ...payload, password: '***REDACTED***' }, null, 2)}`
-    );
+  // Log request details (without password)
+  console.error(
+    `[userLogin] API Request:\n` +
+      `  Endpoint: ${endpoint}\n` +
+      `  Payload: ${JSON.stringify({ ...payload, password: '***REDACTED***' }, null, 2)}`
+  );
 
-    // Call Arobid Backend API
-    const response = await client.post<UserLoginResponse>(endpoint, payload);
+  // Use postWithErrorBody to get the full response even for error status codes
+  // This allows us to check for the special "OTP not verified" case
+  const { body, status, ok } = await client.postWithErrorBody<UserLoginResponse>(endpoint, payload);
 
+  if (ok) {
+    // Success case
     console.error(
       `[userLogin] API Response:\n` +
         `  Status: Success\n` +
         `  Email: ${validatedInput.email}\n` +
-        `  Response: ${JSON.stringify(response, null, 2)}`
+        `  Response: ${JSON.stringify(body, null, 2)}`
     );
 
-    return response;
-  } catch (error) {
-    // Handle Arobid-specific errors
-    if (error && typeof error === 'object' && 'statusCode' in error) {
-      const arobidError = error as ArobidError;
-      console.error(
-        `[userLogin] API Error:\n` +
-          `  Status Code: ${arobidError.statusCode}\n` +
-          `  Error Code: ${arobidError.code || 'N/A'}\n` +
-          `  Message: ${arobidError.message}\n` +
-          `  Email: ${validatedInput.email}`
-      );
-      throw new Error(
-        `Failed to login: ${arobidError.message}${arobidError.code ? ` (${arobidError.code})` : ''}`
-      );
-    }
-
-    // Handle network or other errors
-    console.error(
-      `[userLogin] Unexpected Error:\n` +
-        `  Type: ${error instanceof Error ? error.constructor.name : typeof error}\n` +
-        `  Message: ${error instanceof Error ? error.message : 'Unknown error'}\n` +
-        `  Email: ${validatedInput.email}`
-    );
-    throw new Error(
-      `Failed to login: ${error instanceof Error ? error.message : 'Unknown error'}`
-    );
+    return body;
   }
+
+  // Error case - check if this is the special "OTP not verified" success case
+  if (
+    status === 400 &&
+    body.errorCode === 5 
+  ) {
+    // This is actually a success - OTP was sent successfully
+    console.error(
+      `[userLogin] OTP sent successfully (errorCode 5):\n` +
+        `  Email: ${validatedInput.email}\n` +
+        `  Response: ${JSON.stringify(body, null, 2)}\n` +
+        `  Note: OTP has been sent. Proceed to verify step.`
+    );
+
+    // Return the response indicating OTP was sent successfully
+    return {
+      ...body,
+      _otpSent: true,
+      _message: 'OTP has been sent successfully. Please proceed to verify step.',
+    } as UserLoginResponse;
+  }
+
+  // Other error cases - throw an error
+  const errorMessage = body.errorMessage || `HTTP ${status}: Bad Request`;
+  const errorCode = body.errorCode?.toString();
+  
+  console.error(
+    `[userLogin] API Error:\n` +
+      `  Status Code: ${status}\n` +
+      `  Error Code: ${errorCode || 'N/A'}\n` +
+      `  Message: ${errorMessage}\n` +
+      `  Email: ${validatedInput.email}`
+  );
+  
+  throw new Error(
+    `Failed to login: ${errorMessage}${errorCode ? ` (${errorCode})` : ''}`
+  );
 }
 

@@ -18,7 +18,7 @@ export function registerUserLogin(server: McpServer, client: ArobidClient): void
     {
       title: 'User Login',
       description:
-        'Performs user login in Arobid Backend. This can be used to retrieve a new OTP when the previous one has expired. Requires email and password.',
+        'Performs user login in Arobid Backend. This can be used to retrieve a new OTP when the previous one has expired. Requires email and password. Note: If the response contains errorCode 5, this means OTP was sent successfully and you should proceed to verify step.',
       inputSchema: {
         email: z.string().email().describe('User email address (must be valid email format)'),
         password: z
