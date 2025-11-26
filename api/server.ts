@@ -66,7 +66,6 @@ function createHandlerWithClient(client: ArobidClient) {
         tools: {},
       },
     },
-    { basePath: '/mcp' }
   );
 }
 
