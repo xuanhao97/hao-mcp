@@ -12,6 +12,7 @@ Arobid MCP provides a standardized interface for interacting with Arobid Backend
 - ✅ **User Login** - Login to retrieve a new OTP when the previous one has expired
 - ✅ **Verify User** - Verify user account using OTP code sent to email
 - ✅ **Resend OTP** - Resend OTP code to user email when verification fails or OTP expires
+- ✅ **Check Reset Password** - Initiate password reset process by sending reset link/OTP to user email
 - 🔄 More tools coming soon (profile updates, etc.)
 
 ## Tech Stack
@@ -123,6 +124,7 @@ arobid-mcp/
 │       ├── createPersonalAccount.ts  # Create account tool
 │       ├── userLogin.ts         # User login tool
 │       ├── resendOtp.ts         # Resend OTP tool
+│       ├── checkResetPassword.ts # Check/reset password tool
 │       └── verifyUser.ts        # Verify user tool
 ├── dist/                        # Compiled JavaScript (generated)
 ├── package.json
@@ -197,6 +199,24 @@ Resends OTP code to user email in Arobid Backend. Use this when verifyUser fails
 ```
 
 **Note**: After calling this tool, a new OTP will be sent to the user's email. Use this tool when verification fails or the OTP has expired, instead of using `userLogin`.
+
+### `checkResetPassword`
+
+Initiates password reset process in Arobid Backend. This will send a reset link or OTP to the user's email.
+
+**Parameters:**
+
+- `email` (string, required): User email address
+
+**Example:**
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+**Note**: After calling this tool, a password reset link or OTP will be sent to the user's email. Use this tool when a user needs to reset their forgotten password.
 
 ### `verifyUser`
 

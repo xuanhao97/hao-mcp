@@ -1,30 +1,30 @@
 /**
- * MCP tool for resending OTP to user email in Arobid Backend
- * This can be used when verifyUser fails due to expired or invalid OTP
+ * MCP tool for checking/resetting password in Arobid Backend
+ * This initiates the password reset process by sending a reset link/OTP to the user's email
  */
 
 import { ArobidClient, ArobidError } from '../client/arobidClient.js';
 import { validateEmail, validateNonEmptyString } from '../utils/validation.js';
 
 /**
- * Input parameters for resending OTP
+ * Input parameters for checking/resetting password
  */
-export interface ResendOtpInput {
-  userEmail: string;
+export interface CheckResetPasswordInput {
+  email: string;
 }
 
 /**
- * Response from Arobid Backend after resending OTP
+ * Response from Arobid Backend after checking reset password
  */
-export interface ResendOtpResponse {
+export interface CheckResetPasswordResponse {
   // TODO: Update with actual response structure from Arobid Backend API
   [key: string]: unknown;
 }
 
 /**
- * Validates input parameters for resending OTP
+ * Validates input parameters for checking reset password
  */
-function validateInput(input: unknown): ResendOtpInput {
+function validateInput(input: unknown): CheckResetPasswordInput {
   if (!input || typeof input !== 'object') {
     throw new Error('Input must be an object');
   }
@@ -32,47 +32,47 @@ function validateInput(input: unknown): ResendOtpInput {
   const params = input as Record<string, unknown>;
 
   // Required fields
-  validateNonEmptyString(params.userEmail, 'userEmail');
-  validateEmail(params.userEmail, 'userEmail');
+  validateNonEmptyString(params.email, 'email');
+  validateEmail(params.email, 'email');
 
   return {
-    userEmail: (params.userEmail as string).trim(),
+    email: (params.email as string).trim(),
   };
 }
 
 /**
- * Resends OTP to user email via Arobid Backend
- * Use this when verifyUser fails due to expired or invalid OTP
+ * Initiates password reset process via Arobid Backend
+ * This will send a reset link or OTP to the user's email
  */
-export async function resendOtp(
+export async function checkResetPassword(
   client: ArobidClient,
   input: unknown
-): Promise<ResendOtpResponse> {
+): Promise<CheckResetPasswordResponse> {
   // Validate input
   const validatedInput = validateInput(input);
 
   try {
-    const endpoint = '/api/user/resend_otp_for_user';
+    const endpoint = '/api/user/check_reset_password';
 
     // Prepare request payload matching the API structure
     const payload = {
-      userEmail: validatedInput.userEmail,
+      email: validatedInput.email,
     };
 
     // Log request details
     console.error(
-      `[resendOtp] API Request:\n` +
+      `[checkResetPassword] API Request:\n` +
         `  Endpoint: ${endpoint}\n` +
         `  Payload: ${JSON.stringify(payload, null, 2)}`
     );
 
     // Call Arobid Backend API
-    const response = await client.post<ResendOtpResponse>(endpoint, payload);
+    const response = await client.post<CheckResetPasswordResponse>(endpoint, payload);
 
     console.error(
-      `[resendOtp] API Response:\n` +
+      `[checkResetPassword] API Response:\n` +
         `  Status: Success\n` +
-        `  Email: ${validatedInput.userEmail}\n` +
+        `  Email: ${validatedInput.email}\n` +
         `  Response: ${JSON.stringify(response, null, 2)}`
     );
 
@@ -82,26 +82,26 @@ export async function resendOtp(
     if (error && typeof error === 'object' && 'statusCode' in error) {
       const arobidError = error as ArobidError;
       console.error(
-        `[resendOtp] API Error:\n` +
+        `[checkResetPassword] API Error:\n` +
           `  Status Code: ${arobidError.statusCode}\n` +
           `  Error Code: ${arobidError.code || 'N/A'}\n` +
           `  Message: ${arobidError.message}\n` +
-          `  Email: ${validatedInput.userEmail}`
+          `  Email: ${validatedInput.email}`
       );
       throw new Error(
-        `Failed to resend OTP: ${arobidError.message}${arobidError.code ? ` (${arobidError.code})` : ''}`
+        `Failed to reset password: ${arobidError.message}${arobidError.code ? ` (${arobidError.code})` : ''}`
       );
     }
 
     // Handle network or other errors
     console.error(
-      `[resendOtp] Unexpected Error:\n` +
+      `[checkResetPassword] Unexpected Error:\n` +
         `  Type: ${error instanceof Error ? error.constructor.name : typeof error}\n` +
         `  Message: ${error instanceof Error ? error.message : 'Unknown error'}\n` +
-        `  Email: ${validatedInput.userEmail}`
+        `  Email: ${validatedInput.email}`
     );
     throw new Error(
-      `Failed to resend OTP: ${error instanceof Error ? error.message : 'Unknown error'}`
+      `Failed to reset password: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
 }

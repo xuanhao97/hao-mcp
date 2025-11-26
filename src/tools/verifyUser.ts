@@ -3,6 +3,7 @@
  */
 
 import { ArobidClient, ArobidError } from '../client/arobidClient.js';
+import { validateEmail, validateNonEmptyString } from '../utils/validation.js';
 
 /**
  * Input parameters for verifying a user account
@@ -31,29 +32,21 @@ function validateInput(input: unknown): VerifyUserInput {
   const params = input as Record<string, unknown>;
 
   // Required fields
-  if (!params.userEmail || typeof params.userEmail !== 'string' || !params.userEmail.trim()) {
-    throw new Error('userEmail is required and must be a non-empty string');
-  }
+  validateNonEmptyString(params.userEmail, 'userEmail');
+  validateEmail(params.userEmail, 'userEmail');
 
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(params.userEmail)) {
-    throw new Error('userEmail must be a valid email address');
-  }
-
-  if (!params.otp || typeof params.otp !== 'string' || !params.otp.trim()) {
-    throw new Error('otp is required and must be a non-empty string');
-  }
+  validateNonEmptyString(params.otp, 'otp');
 
   // OTP validation: typically 6 digits
   const otpRegex = /^\d{6}$/;
-  if (!otpRegex.test(params.otp)) {
+  const otpString = params.otp as string;
+  if (!otpRegex.test(otpString)) {
     throw new Error('otp must be exactly 6 digits');
   }
 
   return {
-    userEmail: params.userEmail.trim(),
-    otp: params.otp.trim(),
+    userEmail: (params.userEmail as string).trim(),
+    otp: (params.otp as string).trim(),
   };
 }
 

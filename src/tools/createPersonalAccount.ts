@@ -3,6 +3,7 @@
  */
 
 import { ArobidClient, ArobidError } from '../client/arobidClient.js';
+import { validateEmail, validateNonEmptyString } from '../utils/validation.js';
 
 /**
  * Input parameters for creating a personal account
@@ -78,35 +79,23 @@ function validateInput(input: unknown): CreatePersonalAccountInput {
   const params = input as Record<string, unknown>;
 
   // Required fields
-  if (!params.email || typeof params.email !== 'string' || !params.email.trim()) {
-    throw new Error('email is required and must be a non-empty string');
-  }
-
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(params.email)) {
-    throw new Error('email must be a valid email address');
-  }
+  validateNonEmptyString(params.email, 'email');
+  validateEmail(params.email, 'email');
 
   if (!params.password || typeof params.password !== 'string') {
     throw new Error('password is required');
   }
   validatePassword(params.password);
 
-  if (!params.firstName || typeof params.firstName !== 'string' || !params.firstName.trim()) {
-    throw new Error('firstName is required and must be a non-empty string');
-  }
-
-  if (!params.lastName || typeof params.lastName !== 'string' || !params.lastName.trim()) {
-    throw new Error('lastName is required and must be a non-empty string');
-  }
+  validateNonEmptyString(params.firstName, 'firstName');
+  validateNonEmptyString(params.lastName, 'lastName');
 
   // Optional fields
   const result: CreatePersonalAccountInput = {
-    email: params.email.trim(),
-    password: params.password,
-    firstName: params.firstName.trim(),
-    lastName: params.lastName.trim(),
+    email: (params.email as string).trim(),
+    password: params.password as string,
+    firstName: (params.firstName as string).trim(),
+    lastName: (params.lastName as string).trim(),
   };
 
   // Title validation: must be "Mr" or "Mrs", default to "Mr"

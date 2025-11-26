@@ -13,6 +13,7 @@ import { registerCreatePersonalAccount } from './tools/registerCreatePersonalAcc
 import { registerVerifyUser } from './tools/registerVerifyUser.js';
 import { registerUserLogin } from './tools/registerUserLogin.js';
 import { registerResendOtp } from './tools/registerResendOtp.js';
+import { registerCheckResetPassword } from './tools/registerCheckResetPassword.js';
 
 /**
  * Registers all MCP tools on the given server instance
@@ -25,5 +26,6 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   registerVerifyUser(server, client);
   registerUserLogin(server, client);
   registerResendOtp(server, client);
+  registerCheckResetPassword(server, client);
 }
 

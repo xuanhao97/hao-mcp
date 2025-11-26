@@ -4,6 +4,7 @@
  */
 
 import { ArobidClient } from '../client/arobidClient.js';
+import { validateEmail, validateNonEmptyString } from '../utils/validation.js';
 
 /**
  * Input parameters for user login
@@ -35,23 +36,16 @@ function validateInput(input: unknown): UserLoginInput {
   const params = input as Record<string, unknown>;
 
   // Required fields
-  if (!params.email || typeof params.email !== 'string' || !params.email.trim()) {
-    throw new Error('email is required and must be a non-empty string');
-  }
-
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(params.email)) {
-    throw new Error('email must be a valid email address');
-  }
+  validateNonEmptyString(params.email, 'email');
+  validateEmail(params.email, 'email');
 
   if (!params.password || typeof params.password !== 'string') {
     throw new Error('password is required and must be a non-empty string');
   }
 
   return {
-    email: params.email.trim(),
-    password: params.password,
+    email: (params.email as string).trim(),
+    password: params.password as string,
   };
 }
 
