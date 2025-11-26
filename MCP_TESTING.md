@@ -111,7 +111,7 @@ On macOS/Linux:
 ```bash
 # Get the absolute path to your project
 pwd
-# Output: /Users/haopham/personal/arobid-mcp
+# Output: /path/to/arobid-mcp
 ```
 
 On Windows:

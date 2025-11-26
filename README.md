@@ -15,9 +15,8 @@ Arobid MCP provides a standardized interface for interacting with Arobid Backend
 
 - **Language**: TypeScript
 - **Runtime**: Node.js (v18+)
-- **Framework**: MCP SDK (`@modelcontextprotocol/sdk`) + Express.js
+- **Framework**: MCP SDK (`@modelcontextprotocol/sdk`)
 - **Package Manager**: npm
-- **Deployment**: Vercel-compatible (serverless functions)
 
 ## Prerequisites
 
@@ -79,26 +78,12 @@ Start the MCP server (stdio transport):
 npm start
 ```
 
-Start the HTTP server (Express.js):
-
-```bash
-npm run start:http
-```
-
-The HTTP server will run on port 3000 (or the port specified in the `PORT` environment variable).
-
 ### Development Mode
 
-Watch for changes and rebuild automatically (MCP server):
+Watch for changes and rebuild automatically:
 
 ```bash
 npm run dev
-```
-
-Watch for changes and rebuild automatically (HTTP server):
-
-```bash
-npm run dev:http
 ```
 
 ### Type Checking
@@ -115,13 +100,12 @@ npm run type-check
 arobid-mcp/
 ├── src/
 │   ├── index.ts                 # MCP server entrypoint (stdio transport)
-│   ├── server.ts                # Express HTTP server entrypoint
 │   ├── client/
 │   │   └── arobidClient.ts      # HTTP client for Arobid Backend
 │   └── tools/
-│       └── createPersonalAccount.ts  # Create account tool
+│       ├── createPersonalAccount.ts  # Create account tool
+│       └── verifyUser.ts        # Verify user tool
 ├── dist/                        # Compiled JavaScript (generated)
-├── vercel.json                  # Vercel deployment configuration
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -135,27 +119,45 @@ Creates a new personal user account in Arobid Backend.
 
 **Parameters:**
 - `email` (string, required): User email address
-- `password` (string, required): User password (minimum 6 characters)
-- `fullName` (string, required): User full name
-- `phone` (string, optional): User phone number
-- `avatarUrl` (string, optional): URL to user avatar image
+- `password` (string, required): User password (6-20 characters with complexity requirements)
+- `firstName` (string, required): User first name
+- `lastName` (string, required): User last name
+- `title` (string, required): User title (Mr or Mrs)
+- `phone` (string, required): User phone number (Vietnamese or international format)
+- `national` (string, required): User nationality code (2-letter uppercase country code)
 
 **Example:**
 ```json
 {
   "email": "user@example.com",
-  "password": "securepassword123",
-  "fullName": "John Doe",
-  "phone": "+1234567890",
-  "avatarUrl": "https://example.com/avatar.jpg"
+  "password": "SecurePass123!",
+  "firstName": "John",
+  "lastName": "Doe",
+  "title": "Mr",
+  "phone": "+841231231123",
+  "national": "VN"
 }
 ```
 
-## Server Modes
+### `verifyUser`
 
-This project supports two server modes:
+Verifies a user account in Arobid Backend using the OTP code sent to the user email.
 
-### 1. MCP Server (stdio transport)
+**Parameters:**
+- `userEmail` (string, required): User email address
+- `otp` (string, required): One-time password (OTP) code - exactly 6 digits
+
+**Example:**
+```json
+{
+  "userEmail": "user@example.com",
+  "otp": "123456"
+}
+```
+
+**Note**: The OTP in this example is for demonstration only. In production, use the actual OTP code sent to the user's email.
+
+## MCP Server Integration
 
 The MCP server uses stdio transport and can be integrated with any MCP-compatible client. Configure your MCP client to point to this server's entrypoint.
 
@@ -175,61 +177,6 @@ Example configuration (for Claude Desktop or similar):
   }
 }
 ```
-
-### 2. HTTP Server (Express.js)
-
-The HTTP server provides REST API endpoints for web applications and is optimized for Vercel deployment.
-
-**Available Endpoints:**
-
-- `GET /health` - Health check endpoint
-- `GET /api/tools` - List all available tools
-- `POST /api/tools/createPersonalAccount` - Create a personal account
-
-**Example API Request:**
-
-```bash
-curl -X POST http://localhost:3000/api/tools/createPersonalAccount \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "password": "securepassword123",
-    "fullName": "John Doe"
-  }'
-```
-
-**Example Response:**
-
-```json
-{
-  "success": true,
-  "data": {
-    "id": "user-123",
-    "email": "user@example.com",
-    "fullName": "John Doe",
-    "createdAt": "2024-01-01T00:00:00Z"
-  }
-}
-```
-
-## Vercel Deployment
-
-This project is designed to be Vercel-compatible. The Express.js HTTP server is optimized for Vercel's serverless functions.
-
-**To deploy:**
-
-1. Ensure your `package.json` includes a build script
-2. Set environment variables in Vercel dashboard:
-   - `AROBID_BACKEND_URL`
-   - `AROBID_API_KEY` (if required)
-   - `AROBID_TENANT_ID` (if required)
-3. Deploy using the `vercel.json` configuration
-
-The `vercel.json` file is already configured to route all requests to the Express server at `dist/server.js`.
-
-**Note**: 
-- The HTTP server mode (`server.ts`) is recommended for Vercel deployment
-- The MCP stdio server (`index.ts`) is designed for local development and MCP client integration
 
 ## Error Handling
 
@@ -282,7 +229,7 @@ To use this MCP server with Cursor:
 2. **Get your project's absolute path**:
    ```bash
    pwd
-   # Example output: /Users/haopham/personal/arobid-mcp
+   # Example output: /path/to/arobid-mcp
    ```
 
 3. **Add the configuration** (see `cursor-mcp-config.json.example` for a template):

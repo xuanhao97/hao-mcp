@@ -3,7 +3,7 @@
     "arobid": {
       "command": "node",
       "args": [
-        "/Users/haopham/personal/arobid-mcp/dist/index.js"
+        "/path/to/arobid-mcp/dist/index.js"
       ],
       "env": {
         "AROBID_BACKEND_URL": "https://api.arobid.com",

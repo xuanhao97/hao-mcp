@@ -42,7 +42,7 @@ Open `cline_mcp_settings.json` and add:
   "mcpServers": {
     "arobid": {
       "command": "node",
-      "args": ["/Users/haopham/personal/arobid-mcp/dist/index.js"],
+      "args": ["/path/to/arobid-mcp/dist/index.js"],
       "env": {
         "AROBID_BACKEND_URL": "https://api.arobid.com",
         "AROBID_API_KEY": "your-api-key-here"
@@ -52,7 +52,7 @@ Open `cline_mcp_settings.json` and add:
 }
 ```
 
-**⚠️ Important:** Replace `/Users/haopham/personal/arobid-mcp` with your actual path from Step 1!
+**⚠️ Important:** Replace `/path/to/arobid-mcp` with your actual path from Step 1!
 
 ### Step 4: Restart Cursor
 
