@@ -9,7 +9,9 @@ Arobid MCP provides a standardized interface for interacting with Arobid Backend
 ## Features
 
 - ✅ **Create Personal Account** - Register new user accounts via Arobid Backend
-- 🔄 More tools coming soon (login, profile updates, etc.)
+- ✅ **User Login** - Login to retrieve a new OTP when the previous one has expired
+- ✅ **Verify User** - Verify user account using OTP code sent to email
+- 🔄 More tools coming soon (profile updates, etc.)
 
 ## Tech Stack
 
@@ -118,6 +120,7 @@ arobid-mcp/
 │   │   └── arobidClient.ts      # HTTP client for Arobid Backend
 │   └── tools/
 │       ├── createPersonalAccount.ts  # Create account tool
+│       ├── userLogin.ts         # User login tool
 │       └── verifyUser.ts        # Verify user tool
 ├── dist/                        # Compiled JavaScript (generated)
 ├── package.json
@@ -155,6 +158,26 @@ Creates a new personal user account in Arobid Backend.
 }
 ```
 
+### `userLogin`
+
+Performs user login in Arobid Backend. This can be used to retrieve a new OTP when the previous one has expired.
+
+**Parameters:**
+
+- `email` (string, required): User email address
+- `password` (string, required): User password
+
+**Example:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "SecurePass123!"
+}
+```
+
+**Note**: After successful login, a new OTP will be sent to the user's email. Use this tool when you need to retrieve a fresh OTP after the previous one has expired.
+
 ### `verifyUser`
 
 Verifies a user account in Arobid Backend using the OTP code sent to the user email.
@@ -173,7 +196,7 @@ Verifies a user account in Arobid Backend using the OTP code sent to the user em
 }
 ```
 
-**Note**: The OTP in this example is for demonstration only. In production, use the actual OTP code sent to the user's email.
+**Note**: The OTP in this example is for demonstration only. In production, use the actual OTP code sent to the user's email. If the OTP has expired, use `userLogin` to retrieve a new one.
 
 ## MCP Server Integration
 
@@ -188,7 +211,7 @@ Example configuration (for Claude Desktop or similar):
       "command": "node",
       "args": ["/path/to/arobid-mcp/dist/index.js"],
       "env": {
-        "AROBID_BACKEND_URL": "https://api.arobid.com",
+        "AROBID_BACKEND_URL": https://api.example.com",
         "AROBID_API_KEY": "your-api-key"
       }
     }
@@ -244,7 +267,7 @@ To use this MCP server with Cursor:
          "command": "node",
          "args": ["/absolute/path/to/arobid-mcp/dist/index.js"],
          "env": {
-           "AROBID_BACKEND_URL": "https://api.arobid.com",
+           "AROBID_BACKEND_URL": https://api.example.com",
            "AROBID_API_KEY": "your-api-key-here"
          }
        }
@@ -309,9 +332,9 @@ Update your `.cursor/mcp.json` configuration to use the HTTP transport:
 {
   "mcpServers": {
     "arobid": {
-      "url": "https://your-project.vercel.app/api/mcp",
+      "url": "https://your-project.vercel.app/mcp",
       "headers":{
-       "X-Arobid-Backend-Url": "https://gw-stg.arobid.site/b2b"
+       "X-Arobid-Backend-Url": https://api.example.com"
       }
     }
   }
@@ -354,11 +377,11 @@ This will start a local server that mimics Vercel's serverless environment.
 
 The following items need to be configured based on actual Arobid Backend API:
 
-- [ ] Verify exact endpoint path for account creation (currently `/api/v1/auth/register`)
+- [ ] Verify exact endpoint path for account creation (currently `/api/user/create_user_for_sign_up_async`)
 - [ ] Verify authentication header format (currently using `Authorization: Bearer <key>`)
 - [ ] Verify tenant ID header name (currently using `X-Tenant-ID`)
 - [ ] Add response type definitions based on actual API responses
-- [ ] Add additional tools (login, profile update, etc.)
+- [ ] Add additional tools (profile update, etc.)
 
 All TODO items are marked with `// TODO` comments in the code.
 

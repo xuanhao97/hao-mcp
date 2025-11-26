@@ -11,6 +11,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { ArobidClient } from '../client/arobidClient.js';
 import { registerCreatePersonalAccount } from './tools/registerCreatePersonalAccount.js';
 import { registerVerifyUser } from './tools/registerVerifyUser.js';
+import { registerUserLogin } from './tools/registerUserLogin.js';
 
 /**
  * Registers all MCP tools on the given server instance
@@ -21,5 +22,6 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   // Register all available tools
   registerCreatePersonalAccount(server, client);
   registerVerifyUser(server, client);
+  registerUserLogin(server, client);
 }
 
