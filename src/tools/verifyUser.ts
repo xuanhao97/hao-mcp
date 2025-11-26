@@ -79,8 +79,8 @@ export async function verifyUser(
     // Log request details
     console.error(
       `[verifyUser] API Request:\n` +
-      `  Endpoint: ${endpoint}\n` +
-      `  Payload: ${JSON.stringify({ ...payload, otp: '***REDACTED***' }, null, 2)}`
+        `  Endpoint: ${endpoint}\n` +
+        `  Payload: ${JSON.stringify({ ...payload, otp: '***REDACTED***' }, null, 2)}`
     );
 
     // Call Arobid Backend API
@@ -88,9 +88,9 @@ export async function verifyUser(
 
     console.error(
       `[verifyUser] API Response:\n` +
-      `  Status: Success\n` +
-      `  Email: ${validatedInput.userEmail}\n` +
-      `  Response: ${JSON.stringify(response, null, 2)}`
+        `  Status: Success\n` +
+        `  Email: ${validatedInput.userEmail}\n` +
+        `  Response: ${JSON.stringify(response, null, 2)}`
     );
 
     return response;
@@ -100,10 +100,10 @@ export async function verifyUser(
       const arobidError = error as ArobidError;
       console.error(
         `[verifyUser] API Error:\n` +
-        `  Status Code: ${arobidError.statusCode}\n` +
-        `  Error Code: ${arobidError.code || 'N/A'}\n` +
-        `  Message: ${arobidError.message}\n` +
-        `  Email: ${validatedInput.userEmail}`
+          `  Status Code: ${arobidError.statusCode}\n` +
+          `  Error Code: ${arobidError.code || 'N/A'}\n` +
+          `  Message: ${arobidError.message}\n` +
+          `  Email: ${validatedInput.userEmail}`
       );
       throw new Error(
         `Failed to verify user: ${arobidError.message}${arobidError.code ? ` (${arobidError.code})` : ''}`
@@ -113,13 +113,12 @@ export async function verifyUser(
     // Handle network or other errors
     console.error(
       `[verifyUser] Unexpected Error:\n` +
-      `  Type: ${error instanceof Error ? error.constructor.name : typeof error}\n` +
-      `  Message: ${error instanceof Error ? error.message : 'Unknown error'}\n` +
-      `  Email: ${validatedInput.userEmail}`
+        `  Type: ${error instanceof Error ? error.constructor.name : typeof error}\n` +
+        `  Message: ${error instanceof Error ? error.message : 'Unknown error'}\n` +
+        `  Email: ${validatedInput.userEmail}`
     );
     throw new Error(
       `Failed to verify user: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
 }
-

@@ -24,11 +24,13 @@ pwd
 ### Step 2: Find Cursor Config File
 
 **macOS:**
+
 ```bash
 open ~/Library/Application\ Support/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/
 ```
 
 **Or manually navigate to:**
+
 - macOS: `~/Library/Application Support/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
 - Windows: `%APPDATA%\Cursor\User\globalStorage\saoudrizwan.claude-dev\settings\cline_mcp_settings.json`
 - Linux: `~/.config/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
@@ -61,20 +63,22 @@ Close and reopen Cursor completely.
 ### Step 5: Test in Cursor
 
 Open a chat and try:
+
 - "What MCP tools are available?"
 - "Create a personal account for test@example.com with password test123 and name Test User"
 
 ## 🐛 Troubleshooting
 
 **Server not found?**
+
 - Check the path is absolute (starts with `/` on Mac/Linux)
 - Verify `dist/index.js` exists: `ls dist/index.js`
 - Make sure you ran `npm run build`
 
 **Environment variables not working?**
+
 - Check the `env` section in the config
 - Restart Cursor after changing env vars
 
 **Need more help?**
 See [MCP_TESTING.md](./MCP_TESTING.md) for detailed instructions.
-

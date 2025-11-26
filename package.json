@@ -9,7 +9,9 @@
     "start": "node dist/index.js",
     "dev": "tsc --watch",
     "test:mcp": "node test-mcp.js",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\" \"*.{md,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json}\" \"*.{md,json}\""
   },
   "keywords": [
     "mcp",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
+    "prettier": "^3.6.2",
     "typescript": "^5.3.3"
   },
   "engines": {

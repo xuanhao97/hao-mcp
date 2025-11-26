@@ -26,11 +26,13 @@ Arobid MCP provides a standardized interface for interacting with Arobid Backend
 ## Installation
 
 1. Clone or navigate to this repository:
+
    ```bash
    cd arobid-mcp
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -54,11 +56,11 @@ AROBID_TENANT_ID=your-tenant-id
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `AROBID_BACKEND_URL` | Yes | Base URL of the Arobid Backend API |
-| `AROBID_API_KEY` | No | API key for authenticating requests (if required) |
-| `AROBID_TENANT_ID` | No | Tenant identifier for multi-tenant setups |
+| Variable             | Required | Description                                       |
+| -------------------- | -------- | ------------------------------------------------- |
+| `AROBID_BACKEND_URL` | Yes      | Base URL of the Arobid Backend API                |
+| `AROBID_API_KEY`     | No       | API key for authenticating requests (if required) |
+| `AROBID_TENANT_ID`   | No       | Tenant identifier for multi-tenant setups         |
 
 ## Development
 
@@ -94,6 +96,18 @@ Check TypeScript types without building:
 npm run type-check
 ```
 
+### Code Formatting
+
+Format code using Prettier:
+
+```bash
+# Format all files
+npm run format
+
+# Check formatting without making changes
+npm run format:check
+```
+
 ## Project Structure
 
 ```
@@ -118,6 +132,7 @@ arobid-mcp/
 Creates a new personal user account in Arobid Backend.
 
 **Parameters:**
+
 - `email` (string, required): User email address
 - `password` (string, required): User password (6-20 characters with complexity requirements)
 - `firstName` (string, required): User first name
@@ -127,6 +142,7 @@ Creates a new personal user account in Arobid Backend.
 - `national` (string, required): User nationality code (2-letter uppercase country code)
 
 **Example:**
+
 ```json
 {
   "email": "user@example.com",
@@ -144,10 +160,12 @@ Creates a new personal user account in Arobid Backend.
 Verifies a user account in Arobid Backend using the OTP code sent to the user email.
 
 **Parameters:**
+
 - `userEmail` (string, required): User email address
 - `otp` (string, required): One-time password (OTP) code - exactly 6 digits
 
 **Example:**
+
 ```json
 {
   "userEmail": "user@example.com",
@@ -202,6 +220,7 @@ npm run test:mcp
 ```
 
 The test script will:
+
 - Start the MCP server
 - Send `tools/list` request to list available tools
 - Send `tools/call` request to test `createPersonalAccount`
@@ -227,12 +246,14 @@ To use this MCP server with Cursor:
    - **Linux**: `~/.config/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
 
 2. **Get your project's absolute path**:
+
    ```bash
    pwd
    # Example output: /path/to/arobid-mcp
    ```
 
 3. **Add the configuration** (see `cursor-mcp-config.json.example` for a template):
+
    ```json
    {
      "mcpServers": {
@@ -278,4 +299,3 @@ When adding new tools:
 ## License
 
 MIT
-

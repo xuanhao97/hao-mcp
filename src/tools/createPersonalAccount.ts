@@ -57,9 +57,7 @@ function validatePhone(phone: string, national?: string): void {
   if (national === 'VN' || !national) {
     // If national is VN or not specified, validate as Vietnamese phone
     if (!vnPhoneRegex.test(phone)) {
-      throw new Error(
-        'Phone must be a valid Vietnamese phone number (+84XXXXXXXXX or 0XXXXXXXXX)'
-      );
+      throw new Error('Phone must be a valid Vietnamese phone number (+84XXXXXXXXX or 0XXXXXXXXX)');
     }
   } else {
     // For other countries, validate as international format
@@ -193,8 +191,8 @@ export async function createPersonalAccount(
     };
     console.error(
       `[createPersonalAccount] API Request:\n` +
-      `  Endpoint: ${endpoint}\n` +
-      `  Payload: ${JSON.stringify(logPayload, null, 2)}`
+        `  Endpoint: ${endpoint}\n` +
+        `  Payload: ${JSON.stringify(logPayload, null, 2)}`
     );
 
     // Call Arobid Backend API
@@ -202,9 +200,9 @@ export async function createPersonalAccount(
 
     console.error(
       `[createPersonalAccount] API Response:\n` +
-      `  Status: Success\n` +
-      `  Email: ${validatedInput.email}\n` +
-      `  Response: ${JSON.stringify(response, null, 2)}`
+        `  Status: Success\n` +
+        `  Email: ${validatedInput.email}\n` +
+        `  Response: ${JSON.stringify(response, null, 2)}`
     );
 
     return response;
@@ -214,10 +212,10 @@ export async function createPersonalAccount(
       const arobidError = error as ArobidError;
       console.error(
         `[createPersonalAccount] API Error:\n` +
-        `  Status Code: ${arobidError.statusCode}\n` +
-        `  Error Code: ${arobidError.code || 'N/A'}\n` +
-        `  Message: ${arobidError.message}\n` +
-        `  Email: ${validatedInput.email}`
+          `  Status Code: ${arobidError.statusCode}\n` +
+          `  Error Code: ${arobidError.code || 'N/A'}\n` +
+          `  Message: ${arobidError.message}\n` +
+          `  Email: ${validatedInput.email}`
       );
       throw new Error(
         `Failed to create account: ${arobidError.message}${arobidError.code ? ` (${arobidError.code})` : ''}`
@@ -227,14 +225,12 @@ export async function createPersonalAccount(
     // Handle network or other errors
     console.error(
       `[createPersonalAccount] Unexpected Error:\n` +
-      `  Type: ${error instanceof Error ? error.constructor.name : typeof error}\n` +
-      `  Message: ${error instanceof Error ? error.message : 'Unknown error'}\n` +
-      `  Email: ${validatedInput.email}`
+        `  Type: ${error instanceof Error ? error.constructor.name : typeof error}\n` +
+        `  Message: ${error instanceof Error ? error.message : 'Unknown error'}\n` +
+        `  Email: ${validatedInput.email}`
     );
     throw new Error(
       `Failed to create account: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
 }
-
-

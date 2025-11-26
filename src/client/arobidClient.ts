@@ -192,4 +192,3 @@ export function createArobidClient(): ArobidClient {
     tenantId: process.env.AROBID_TENANT_ID,
   });
 }
-

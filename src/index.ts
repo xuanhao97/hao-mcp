@@ -2,7 +2,7 @@
 
 /**
  * Arobid MCP Server
- * 
+ *
  * MCP server that connects to Arobid Backend, allowing AI tools and editors
  * to call backend APIs in a structured way.
  */
@@ -64,9 +64,7 @@ async function main() {
           ),
         firstName: z.string().min(1).describe('User first name'),
         lastName: z.string().min(1).describe('User last name'),
-        title: z
-          .enum(['Mr', 'Mrs'])
-          .describe('User title (Mr or Mrs)'),
+        title: z.enum(['Mr', 'Mrs']).describe('User title (Mr or Mrs)'),
         phone: z
           .string()
           .refine(
@@ -78,7 +76,8 @@ async function main() {
               return vnPhoneRegex.test(val) || intlPhoneRegex.test(val);
             },
             {
-              message: 'Phone must be a valid Vietnamese phone (+84XXXXXXXXX or 0XXXXXXXXX) or international format (+XXXXXXXXXXX)',
+              message:
+                'Phone must be a valid Vietnamese phone (+84XXXXXXXXX or 0XXXXXXXXX) or international format (+XXXXXXXXXXX)',
             }
           )
           .describe('User phone number (Vietnamese or international format)'),
@@ -99,7 +98,7 @@ async function main() {
       }
       console.error(
         `[Arobid MCP] Tool called: createPersonalAccount\n` +
-        `[Arobid MCP] Request parameters: ${JSON.stringify(logArgs, null, 2)}`
+          `[Arobid MCP] Request parameters: ${JSON.stringify(logArgs, null, 2)}`
       );
 
       const startTime = Date.now();
@@ -110,8 +109,8 @@ async function main() {
 
         console.error(
           `[Arobid MCP] Tool execution completed: createPersonalAccount\n` +
-          `[Arobid MCP] Duration: ${duration}ms\n` +
-          `[Arobid MCP] Result: ${JSON.stringify(result, null, 2)}`
+            `[Arobid MCP] Duration: ${duration}ms\n` +
+            `[Arobid MCP] Result: ${JSON.stringify(result, null, 2)}`
         );
 
         return {
@@ -125,13 +124,12 @@ async function main() {
       } catch (error) {
         const duration = Date.now() - startTime;
         // Convert errors to MCP-friendly format
-        const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error occurred';
-        
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
         console.error(
           `[Arobid MCP] Tool execution error: createPersonalAccount\n` +
-          `[Arobid MCP] Duration: ${duration}ms\n` +
-          `[Arobid MCP] Error: ${errorMessage}`
+            `[Arobid MCP] Duration: ${duration}ms\n` +
+            `[Arobid MCP] Error: ${errorMessage}`
         );
 
         return {
@@ -155,10 +153,7 @@ async function main() {
       description:
         'Verifies a user account in Arobid Backend using the OTP code sent to the user email. Requires userEmail and otp.',
       inputSchema: {
-        userEmail: z
-          .string()
-          .email()
-          .describe('User email address (must be valid email format)'),
+        userEmail: z.string().email().describe('User email address (must be valid email format)'),
         otp: z
           .string()
           .regex(/^\d{6}$/, {
@@ -175,7 +170,7 @@ async function main() {
       }
       console.error(
         `[Arobid MCP] Tool called: verifyUser\n` +
-        `[Arobid MCP] Request parameters: ${JSON.stringify(logArgs, null, 2)}`
+          `[Arobid MCP] Request parameters: ${JSON.stringify(logArgs, null, 2)}`
       );
 
       const startTime = Date.now();
@@ -186,8 +181,8 @@ async function main() {
 
         console.error(
           `[Arobid MCP] Tool execution completed: verifyUser\n` +
-          `[Arobid MCP] Duration: ${duration}ms\n` +
-          `[Arobid MCP] Result: ${JSON.stringify(result, null, 2)}`
+            `[Arobid MCP] Duration: ${duration}ms\n` +
+            `[Arobid MCP] Result: ${JSON.stringify(result, null, 2)}`
         );
 
         return {
@@ -201,13 +196,12 @@ async function main() {
       } catch (error) {
         const duration = Date.now() - startTime;
         // Convert errors to MCP-friendly format
-        const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error occurred';
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
 
         console.error(
           `[Arobid MCP] Tool execution error: verifyUser\n` +
-          `[Arobid MCP] Duration: ${duration}ms\n` +
-          `[Arobid MCP] Error: ${errorMessage}`
+            `[Arobid MCP] Duration: ${duration}ms\n` +
+            `[Arobid MCP] Error: ${errorMessage}`
         );
 
         return {
@@ -235,4 +229,3 @@ main().catch((error) => {
   console.error('[Arobid MCP] Fatal error:', error);
   process.exit(1);
 });
-
