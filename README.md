@@ -6,15 +6,25 @@ MCP (Model Context Protocol) server that connects to **Arobid Backend**, allowin
 
 Arobid MCP provides a standardized interface for interacting with Arobid Backend services through the Model Context Protocol. This enables AI assistants and development tools to seamlessly integrate with Arobid's backend capabilities.
 
+The server currently provides **6 comprehensive tools** covering account management, authentication, and password reset workflows. All tools include robust input validation, error handling, and detailed logging.
+
 ## Features
 
+### Account Management
 - ✅ **Create Personal Account** - Register new user accounts via Arobid Backend
-- ✅ **User Login** - Login to retrieve a new OTP when the previous one has expired
 - ✅ **Verify User** - Verify user account using OTP code sent to email
+
+### Authentication
+- ✅ **User Login** - Login to retrieve a new OTP when the previous one has expired
 - ✅ **Resend OTP** - Resend OTP code to user email when verification fails or OTP expires
+
+### Password Reset
 - ✅ **Check Reset Password** - Initiate password reset process by sending reset link/OTP to user email
 - ✅ **Confirm Reset Password** - Confirm password reset using OTP sent to email after checkResetPassword
-- 🔄 More tools coming soon (profile updates, etc.)
+
+### Coming Soon
+- 🔄 Profile management tools
+- 🔄 Additional user management features
 
 ## Tech Stack
 
@@ -121,13 +131,26 @@ arobid-mcp/
 │   ├── index.ts                 # MCP server entrypoint (stdio transport)
 │   ├── client/
 │   │   └── arobidClient.ts      # HTTP client for Arobid Backend
+│   ├── utils/
+│   │   └── validation.ts        # Shared validation utilities (email regex, etc.)
+│   ├── server/
+│   │   ├── registerTools.ts     # Tool registration orchestrator
+│   │   └── tools/
+│   │       ├── registerCreatePersonalAccount.ts
+│   │       ├── registerUserLogin.ts
+│   │       ├── registerVerifyUser.ts
+│   │       ├── registerResendOtp.ts
+│   │       ├── registerCheckResetPassword.ts
+│   │       └── registerConfirmResetPassword.ts
 │   └── tools/
 │       ├── createPersonalAccount.ts  # Create account tool
 │       ├── userLogin.ts         # User login tool
+│       ├── verifyUser.ts        # Verify user tool
 │       ├── resendOtp.ts         # Resend OTP tool
 │       ├── checkResetPassword.ts # Check/reset password tool
-│       ├── confirmResetPassword.ts # Confirm reset password tool
-│       └── verifyUser.ts        # Verify user tool
+│       └── confirmResetPassword.ts # Confirm reset password tool
+├── api/
+│   └── server.ts                # Vercel API route handler (HTTP transport)
 ├── dist/                        # Compiled JavaScript (generated)
 ├── package.json
 ├── tsconfig.json
@@ -135,6 +158,25 @@ arobid-mcp/
 ```
 
 ## Available Tools
+
+### Workflows
+
+#### Account Creation & Verification Workflow
+1. Use `createPersonalAccount` to register a new account
+2. Check email for OTP code
+3. Use `verifyUser` with the OTP to complete account verification
+4. If OTP expires, use `resendOtp` or `userLogin` to get a new one
+
+#### Password Reset Workflow
+1. Use `checkResetPassword` with user email to initiate password reset
+2. Check email for OTP code
+3. Use `confirmResetPassword` with email, new password, and OTP to complete the reset
+
+#### OTP Recovery Workflow
+- If OTP expires during verification: Use `resendOtp` to get a new OTP
+- Alternative: Use `userLogin` to login and receive a new OTP
+
+---
 
 ### `createPersonalAccount`
 
@@ -288,9 +330,22 @@ Example configuration (for Claude Desktop or similar):
 The server includes comprehensive error handling:
 
 - **Input Validation**: Validates required fields and data types before making API calls
+  - Shared validation utilities for consistent email validation across all tools
+  - Password complexity requirements enforced
+  - OTP format validation (6 digits)
 - **HTTP Errors**: Converts backend HTTP errors to user-friendly messages
 - **Network Errors**: Handles network failures gracefully
 - **Logging**: Logs important events and errors to stderr (MCP standard)
+  - Sensitive data (passwords, OTPs) are automatically redacted in logs
+
+## Code Quality
+
+The codebase follows best practices:
+
+- **DRY Principle**: Shared validation utilities prevent code duplication
+- **Type Safety**: Full TypeScript support with proper type definitions
+- **Consistent Patterns**: All tools follow the same structure and error handling patterns
+- **Modular Architecture**: Clear separation between tools, registration, and utilities
 
 ## Testing & Cursor Integration
 
@@ -441,7 +496,8 @@ This will start a local server that mimics Vercel's serverless environment.
 
 The following items need to be configured based on actual Arobid Backend API:
 
-- [ ] Verify exact endpoint path for account creation (currently `/api/user/create_user_for_sign_up_async`)
+- [x] Email validation regex refactored to shared utilities
+- [ ] Verify exact endpoint paths match production API
 - [ ] Verify authentication header format (currently using `Authorization: Bearer <key>`)
 - [ ] Verify tenant ID header name (currently using `X-Tenant-ID`)
 - [ ] Add response type definitions based on actual API responses
@@ -454,9 +510,10 @@ All TODO items are marked with `// TODO` comments in the code.
 When adding new tools:
 
 1. Create a new file in `src/tools/` (e.g., `src/tools/myNewTool.ts`)
-2. Export the tool definition and handler function
-3. Register the tool in `src/index.ts`
-4. Update this README with tool documentation
+2. Create a registration file in `src/server/tools/` (e.g., `src/server/tools/registerMyNewTool.ts`)
+3. Register the tool in `src/server/registerTools.ts`
+4. Use shared validation utilities from `src/utils/validation.ts` for email validation and other common checks
+5. Update this README with tool documentation
 
 ## License
 
