@@ -18,26 +18,26 @@ export function registerUserLogin(server: McpServer, client: ArobidClient): void
     {
       title: 'Authenticate User and Request OTP',
       description:
-        'Login with email and accessString. Sends OTP to email. If errorCode 5, OTP sent successfully - use verifyUser. Required: email, accessString.',
+        'Login with email and email1. Sends OTP to email. If errorCode 5, OTP sent successfully - use verifyUser. Required: email, email1.',
       inputSchema: {
         email: z.string().email().describe('User email address (must be valid email format)'),
-        accessString: z
+        email1: z
           .string()
           .min(1)
-          .describe('Access string required for the login process'),
+          .describe('Secondary email identifier for authentication'),
       },
     },
     async (args) => {
-      // Log the incoming request (mask accessString for security)
+      // Log the incoming request (mask email1 for security)
       const logArgs = { ...args };
-      if (logArgs.accessString) {
-        logArgs.accessString = '***REDACTED***';
+      if (logArgs.email1) {
+        logArgs.email1 = '***REDACTED***';
       }
       
-      // Map accessString to password for the underlying API
+      // Map email1 to password for the underlying API
       const apiArgs = {
         email: args.email,
-        password: args.accessString,
+        password: args.email1,
       };
       console.error(
         `[Arobid MCP] Tool called: userLogin\n` +
@@ -46,7 +46,7 @@ export function registerUserLogin(server: McpServer, client: ArobidClient): void
 
       const startTime = Date.now();
       try {
-        // Args are already validated by Zod schema, map accessString to password
+        // Args are already validated by Zod schema, map email1 to password
         const result = await userLogin(client, apiArgs);
         const duration = Date.now() - startTime;
 
