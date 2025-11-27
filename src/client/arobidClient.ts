@@ -2,6 +2,8 @@
  * HTTP client for interacting with Arobid Backend API
  */
 
+import { formatHttpStatus } from '../utils/httpStatusCodes.js';
+
 export interface ArobidClientConfig {
   baseUrl: string;
   apiKey?: string;
@@ -54,16 +56,23 @@ export class ArobidClient {
    * Converts HTTP errors to ArobidError format
    */
   private async handleError(response: Response): Promise<ArobidError> {
-    let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+    const statusDescription = formatHttpStatus(response.status, 'en');
+    let errorMessage = `HTTP ${statusDescription}`;
     let errorCode: string | undefined;
 
     try {
       const errorBody = (await response.json()) as Record<string, unknown>;
       if (errorBody && typeof errorBody === 'object') {
-        errorMessage =
+        const apiMessage =
           (typeof errorBody.message === 'string' ? errorBody.message : null) ||
-          (typeof errorBody.error === 'string' ? errorBody.error : null) ||
-          errorMessage;
+          (typeof errorBody.error === 'string' ? errorBody.error : null);
+        
+        if (apiMessage) {
+          errorMessage = `${apiMessage} (${statusDescription})`;
+        } else {
+          errorMessage = statusDescription;
+        }
+        
         errorCode =
           (typeof errorBody.code === 'string' ? errorBody.code : null) ||
           (typeof errorBody.errorCode === 'string' ? errorBody.errorCode : null) ||
@@ -73,7 +82,9 @@ export class ArobidClient {
       // If response is not JSON, use status text
       const text = await response.text().catch(() => '');
       if (text) {
-        errorMessage = text;
+        errorMessage = `${text} (${statusDescription})`;
+      } else {
+        errorMessage = statusDescription;
       }
     }
 

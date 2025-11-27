@@ -6,12 +6,20 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import * as z from 'zod';
 import { ArobidClient } from '../../client/arobidClient.js';
 import { getWorkspaceEvents } from '../../tools/getWorkspaceEvents.js';
+import { getStatusFilterDescription, getStatusCodesDescription } from '../../utils/eventStatusCodes.js';
 
 const commonFilters = {
   search: z.string().optional().describe('Search keyword'),
   dateFrom: z.string().optional().describe('ISO start date'),
   dateTo: z.string().optional().describe('ISO end date'),
-  status: z.array(z.number().int()).optional().describe('Status filter'),
+  status: z
+    .array(z.number().int())
+    .optional()
+    .describe(
+      getStatusFilterDescription('en') +
+        '\n\n' +
+        getStatusCodesDescription('en')
+    ),
   originCountryId: z.array(z.number().int()).optional().describe('Origin country filter'),
   nationalCode: z.array(z.string()).optional().describe('National code filter'),
   eventType: z.array(z.number().int()).optional().describe('Event type filter'),

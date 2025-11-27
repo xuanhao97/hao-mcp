@@ -6,6 +6,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import * as z from 'zod';
 import { ArobidClient } from '../../client/arobidClient.js';
 import { getAllEvents } from '../../tools/getAllEvents.js';
+import { getStatusFilterDescription, getStatusCodesDescription } from '../../utils/eventStatusCodes.js';
 
 const filtersSchema = {
   pageSize: z.number().int().positive().optional().describe('Page size (default 100)'),
@@ -17,7 +18,14 @@ const filtersSchema = {
   search: z.string().optional().describe('Free-text search'),
   dateFrom: z.string().optional().describe('ISO date string lower bound'),
   dateTo: z.string().optional().describe('ISO date string upper bound'),
-  status: z.array(z.number().int()).optional().describe('Event status filters'),
+  status: z
+    .array(z.number().int())
+    .optional()
+    .describe(
+      getStatusFilterDescription('en') +
+        '\n\n' +
+        getStatusCodesDescription('en')
+    ),
   originCountryId: z.array(z.number().int()).optional().describe('Origin country filter'),
   nationalCode: z.array(z.string()).optional().describe('National code filter'),
   eventType: z.array(z.number().int()).optional().describe('Event type filter'),
