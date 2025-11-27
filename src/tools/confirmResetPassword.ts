@@ -90,7 +90,7 @@ export async function confirmResetPassword(
   const validatedInput = validateInput(input);
 
   try {
-    const endpoint = '/api/user/reset_password_for_users';
+    const endpoint = '/b2b/api/user/reset_password_for_users';
 
     // Prepare request payload matching the API structure
     const payload = {

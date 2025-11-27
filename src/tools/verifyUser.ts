@@ -61,7 +61,7 @@ export async function verifyUser(
   const validatedInput = validateInput(input);
 
   try {
-    const endpoint = '/api/user/verify_user';
+    const endpoint = '/b2b/api/user/verify_user';
 
     // Prepare request payload matching the API structure
     const payload = {

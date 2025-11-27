@@ -86,12 +86,15 @@ export class ArobidClient {
 
   /**
    * Performs a GET request
+   * @param path - The API path
+   * @param customHeaders - Optional custom headers to merge with default headers
    */
-  async get<T>(path: string): Promise<T> {
+  async get<T>(path: string, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseUrl}${path}`;
+    const headers = { ...this.getHeaders(), ...customHeaders };
     const response = await fetch(url, {
       method: 'GET',
-      headers: this.getHeaders(),
+      headers,
     });
 
     if (!response.ok) {

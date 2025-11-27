@@ -6,23 +6,31 @@ MCP (Model Context Protocol) server that connects to **Arobid Backend**, allowin
 
 Arobid MCP provides a standardized interface for interacting with Arobid Backend services through the Model Context Protocol. This enables AI assistants and development tools to seamlessly integrate with Arobid's backend capabilities.
 
-The server currently provides **6 comprehensive tools** covering account management, authentication, and password reset workflows. All tools include robust input validation, error handling, and detailed logging.
+The server currently provides **7 comprehensive tools** covering account management, authentication, password reset workflows, and event search. All tools include robust input validation, error handling, and detailed logging.
 
 ## Features
 
 ### Account Management
+
 - ✅ **Create Personal Account** - Register new user accounts via Arobid Backend
 - ✅ **Verify User** - Verify user account using OTP code sent to email
 
 ### Authentication
+
 - ✅ **User Login** - Login to retrieve a new OTP when the previous one has expired
 - ✅ **Resend OTP** - Resend OTP code to user email when verification fails or OTP expires
 
 ### Password Reset & Change Password
+
 - ✅ **Check Reset Password** - Initiate password reset (forgot password) or change password (update existing) process by sending reset link/OTP to user email. Supports both scenarios with the same workflow.
 - ✅ **Confirm Reset Password** - Confirm password reset/change using OTP sent to email after checkResetPassword
 
+### Events & Exhibitions
+
+- ✅ **Search Events** - Search for active exhibitions/events on Arobid platform. Automatically crawls all pages to retrieve complete results. Supports filtering, pagination, sorting, and localization.
+
 ### Coming Soon
+
 - 🔄 Profile management tools
 - 🔄 Additional user management features
 
@@ -141,14 +149,16 @@ arobid-mcp/
 │   │       ├── registerVerifyUser.ts
 │   │       ├── registerResendOtp.ts
 │   │       ├── registerCheckResetPassword.ts
-│   │       └── registerConfirmResetPassword.ts
+│   │       ├── registerConfirmResetPassword.ts
+│   │       └── registerSearchEvents.ts
 │   └── tools/
 │       ├── createPersonalAccount.ts  # Create account tool
 │       ├── userLogin.ts         # User login tool
 │       ├── verifyUser.ts        # Verify user tool
 │       ├── resendOtp.ts         # Resend OTP tool
 │       ├── checkResetPassword.ts # Check/reset password tool
-│       └── confirmResetPassword.ts # Confirm reset password tool
+│       ├── confirmResetPassword.ts # Confirm reset password tool
+│       └── searchEvents.ts      # Search events/exhibitions tool
 ├── api/
 │   └── server.ts                # Vercel API route handler (HTTP transport)
 ├── dist/                        # Compiled JavaScript (generated)
@@ -162,18 +172,22 @@ arobid-mcp/
 ### Workflows
 
 #### Account Creation & Verification Workflow
+
 1. Use `createPersonalAccount` to register a new account
 2. Check email for OTP code
 3. Use `verifyUser` with the OTP to complete account verification
 4. If OTP expires, use `resendOtp` or `userLogin` to get a new one
 
 #### Password Reset & Change Password Workflow
+
 **Use Case 1: Password Reset (Forgot Password)**
+
 1. Use `checkResetPassword` with user email to initiate password reset
 2. Check email for OTP code
 3. Use `confirmResetPassword` with email, new password, and OTP to complete the reset
 
 **Use Case 2: Change Password (Update Existing Password)**
+
 1. Use `checkResetPassword` with user email to initiate password change
 2. Check email for OTP code
 3. Use `confirmResetPassword` with email, new password, and OTP to complete the change
@@ -181,6 +195,7 @@ arobid-mcp/
 Both scenarios follow the same workflow - the tool automatically handles both reset and change password requests.
 
 #### OTP Recovery Workflow
+
 - If OTP expires during verification: Use `resendOtp` to get a new OTP
 - Alternative: Use `userLogin` to login and receive a new OTP
 
@@ -257,6 +272,7 @@ Resends OTP code to user email in Arobid Backend. Use this when verifyUser fails
 Initiates password reset or change password process in Arobid Backend. This will send a reset link or OTP to the user's email.
 
 **Use Cases:**
+
 - **Password Reset**: When a user has forgotten their password and needs to reset it
 - **Change Password**: When a user wants to change their existing password for security reasons
 
@@ -316,6 +332,61 @@ Verifies a user account in Arobid Backend using the OTP code sent to the user em
 
 **Note**: The OTP in this example is for demonstration only. In production, use the actual OTP code sent to the user's email. If the OTP has expired or verification fails, use `resendOtp` to get a new OTP code, or use `userLogin` to retrieve a new one via login.
 
+### `searchEvents`
+
+Searches for active exhibitions/events on Arobid platform. This tool automatically crawls all available pages to retrieve complete results before returning, ensuring you get all matching events in a single response.
+
+**Key Features:**
+
+- **Automatic Pagination**: Automatically loads all pages until no more events are found
+- **Large Default Page Size**: Uses 1000 items per page by default for efficient data retrieval
+- **Complete Results**: Returns all matching events in a single response, eliminating the need for manual pagination
+
+**Parameters:**
+
+- `search` (string, optional): Search term to filter events (e.g., "foodex")
+- `pageSize` (number, optional): Number of results per page (default: 1000)
+- `pageIndex` (number, optional): Starting page index (default: 1)
+- `sortField` (string, optional): Field to sort by (e.g., "startTime")
+- `asc` (boolean, optional): Sort in ascending order (default: false)
+- `currencyId` (number, optional): Currency ID for pricing (default: 1)
+- `language` (string, optional): Language code for localization (default: "en")
+
+**Example:**
+
+```json
+{
+  "search": "foodex",
+  "pageSize": 1000,
+  "pageIndex": 1,
+  "sortField": "startTime",
+  "asc": false,
+  "currencyId": 1,
+  "language": "en"
+}
+```
+
+**Minimal Example:**
+
+```json
+{
+  "search": "foodex"
+}
+```
+
+**Response Structure:**
+
+The response includes:
+
+- All events from all crawled pages merged into a single array
+- Pagination metadata in `_pagination` field:
+  - `totalPagesLoaded`: Number of pages that were crawled
+  - `startPageIndex`: Starting page index
+  - `endPageIndex`: Last page index that was loaded
+  - `totalEvents`: Total number of events retrieved
+
+**Note**: This tool will automatically crawl through all available pages until no more events are found. The process may take longer for large result sets, but ensures you receive complete results in a single response. The tool includes a safety limit of 1000 pages to prevent infinite loops.
+
 ## MCP Server Integration
 
 The MCP server uses stdio transport and can be integrated with any MCP-compatible client. Configure your MCP client to point to this server's entrypoint.
@@ -368,7 +439,7 @@ Test the MCP server locally using the MCP Inspector (recommended):
 For a better testing experience, use the MCP Inspector:
 
 ```bash
-npx @modelcontextprotocol/inspector node dist/index.js
+npm run build && npx @modelcontextprotocol/inspector node dist/index.js
 ```
 
 This opens a web UI where you can interactively test tools, view logs, and debug issues.
@@ -430,7 +501,6 @@ This MCP server can be deployed to Vercel as a serverless function, allowing it 
    ```
 
 2. **Set up environment variables in Vercel**:
-
    - Go to your Vercel project settings
    - Navigate to Environment Variables
    - Add the following variables:
@@ -449,6 +519,7 @@ This MCP server can be deployed to Vercel as a serverless function, allowing it 
 4. **Get your MCP server URL**:
 
    After deployment, you'll get a URL like `https://your-project.vercel.app`. The MCP endpoint will be available at:
+
    ```
    https://your-project.vercel.app/api/mcp
    ```
@@ -489,6 +560,7 @@ pnpm dlx @modelcontextprotocol/inspector@latest http://your-project.vercel.app/a
 ```
 
 Then:
+
 1. Open `http://127.0.0.1:6274` in your browser
 2. Select "Streamable HTTP" in the dropdown
 3. Enter your Vercel URL: `https://your-project.vercel.app/api/mcp`
@@ -504,11 +576,28 @@ vercel dev
 
 This will start a local server that mimics Vercel's serverless environment.
 
+## API Endpoints
+
+All user management endpoints use the `/b2b` prefix for future extensibility:
+
+- `/b2b/api/user/create_user_for_sign_up_async` - Create personal account
+- `/b2b/api/user/user_login` - User login
+- `/b2b/api/user/verify_user` - Verify user with OTP
+- `/b2b/api/user/resend_otp_for_user` - Resend OTP
+- `/b2b/api/user/check_reset_password` - Initiate password reset/change
+- `/b2b/api/user/reset_password_for_users` - Confirm password reset/change
+
+Events search endpoint:
+
+- `/tradexpo/api/events` - Search exhibitions/events (no `/b2b` prefix as it's a separate API)
+
 ## TODO / Known Limitations
 
 The following items need to be configured based on actual Arobid Backend API:
 
 - [x] Email validation regex refactored to shared utilities
+- [x] Search events tool with automatic pagination
+- [x] All user endpoints refactored with `/b2b` prefix
 - [ ] Verify exact endpoint paths match production API
 - [ ] Verify authentication header format (currently using `Authorization: Bearer <key>`)
 - [ ] Verify tenant ID header name (currently using `X-Tenant-ID`)

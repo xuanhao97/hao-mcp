@@ -154,7 +154,7 @@ export async function createPersonalAccount(
 
   try {
     // TODO: Verify the exact endpoint path for account creation
-    const endpoint = '/api/user/create_user_for_sign_up_async';
+    const endpoint = '/b2b/api/user/create_user_for_sign_up_async';
 
     // Prepare request payload matching the API structure
     // Title defaults to "Mr" if not provided

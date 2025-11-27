@@ -60,7 +60,7 @@ export async function userLogin(
   // Validate input
   const validatedInput = validateInput(input);
 
-  const endpoint = '/api/user/user_login';
+  const endpoint = '/b2b/api/user/user_login';
 
   // Prepare request payload matching the API structure
   const payload = {

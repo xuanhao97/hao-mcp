@@ -52,7 +52,7 @@ export async function resendOtp(
   const validatedInput = validateInput(input);
 
   try {
-    const endpoint = '/api/user/resend_otp_for_user';
+    const endpoint = '/b2b/api/user/resend_otp_for_user';
 
     // Prepare request payload matching the API structure
     const payload = {

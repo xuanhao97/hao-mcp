@@ -66,7 +66,7 @@ export async function checkResetPassword(
   const validatedInput = validateInput(input);
 
   try {
-    const endpoint = '/api/user/check_reset_password';
+    const endpoint = '/b2b/api/user/check_reset_password';
 
     // Prepare request payload matching the API structure
     const payload = {
