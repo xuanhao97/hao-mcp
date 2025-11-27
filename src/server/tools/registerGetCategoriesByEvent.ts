@@ -13,7 +13,7 @@ export function registerGetCategoriesByEvent(server: McpServer, client: ArobidCl
     {
       title: 'Get Categories By Event',
       description:
-        'Retrieves categories for a specific event via /tradexpo/api/category/get-all-categories-by-event-id/{id}.',
+        'Retrieves categories for a specific event.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

@@ -23,7 +23,7 @@ export function registerGetWorkspacePackageItems(server: McpServer, client: Arob
     'getWorkspacePackageItems',
     {
       title: 'Get Workspace Package Items',
-      description: 'Retrieves package items via /tradexpo/api/workspace/get-all-package-item.',
+      description: 'Retrieves package items.',
       inputSchema: {
         ...packageFilters,
         language: z.string().optional().describe('Language header (default: en)'),

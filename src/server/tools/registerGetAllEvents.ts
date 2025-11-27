@@ -31,7 +31,7 @@ export function registerGetAllEvents(server: McpServer, client: ArobidClient): v
     {
       title: 'Get Events (Server Filters)',
       description:
-        'Calls /tradexpo/api/v1/event/get-all-event to retrieve events using backend filters such as status, categories, and date ranges.',
+        'Retrieves events using backend filters such as status, categories, and date ranges.',
       inputSchema: {
         ...filtersSchema,
         language: z.string().optional().describe('Language header (default: en)'),

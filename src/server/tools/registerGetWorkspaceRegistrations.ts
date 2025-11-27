@@ -26,7 +26,7 @@ export function registerGetWorkspaceRegistrations(server: McpServer, client: Aro
     {
       title: 'Get Workspace Registrations',
       description:
-        'Retrieves registrations for a business via /tradexpo/api/workspace/get-all-registration.',
+        'Retrieves registrations for a business.',
       inputSchema: {
         ...registrationFilters,
         language: z.string().optional().describe('Language header (default: en)'),

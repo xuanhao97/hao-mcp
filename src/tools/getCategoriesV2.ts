@@ -1,5 +1,5 @@
 /**
- * MCP tool for retrieving categories using the V2 endpoint
+ * MCP tool for retrieving categories
  */
 
 import { ArobidClient, ArobidError } from '../client/arobidClient.js';

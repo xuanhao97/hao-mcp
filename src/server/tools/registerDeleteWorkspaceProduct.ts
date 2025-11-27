@@ -13,7 +13,7 @@ export function registerDeleteWorkspaceProduct(server: McpServer, client: Arobid
     {
       title: 'Delete Workspace Product',
       description:
-        'Deletes a workspace product via /tradexpo/api/workspace/delete-product/{id}.',
+        'Deletes a workspace product.',
       inputSchema: {
         id: z.number().int().positive().describe('Product subscription ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

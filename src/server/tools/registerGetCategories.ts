@@ -13,7 +13,7 @@ export function registerGetCategories(server: McpServer, client: ArobidClient): 
     {
       title: 'Get Categories',
       description:
-        'Retrieves categories via /tradexpo/api/category/get-all-categories with optional filters.',
+        'Retrieves categories with optional filters.',
       inputSchema: {
         search: z.string().optional().describe('Search keyword'),
         level: z.number().int().optional().describe('Category level'),

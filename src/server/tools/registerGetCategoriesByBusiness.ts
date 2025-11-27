@@ -13,7 +13,7 @@ export function registerGetCategoriesByBusiness(server: McpServer, client: Arobi
     {
       title: 'Get Categories By Business',
       description:
-        'Calls /tradexpo/api/category/get-all-categories-by-business-id to fetch categories tied to a business within an event.',
+        'Fetches categories tied to a business within an event.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID'),
         businessId: z.number().int().positive().describe('Business ID'),

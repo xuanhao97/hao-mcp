@@ -13,7 +13,7 @@ export function registerGetWorkspaceEventBanners(server: McpServer, client: Arob
     {
       title: 'Get Workspace Event Banners',
       description:
-        'Retrieves event banners associated with a business via /tradexpo/api/workspace/get-all-event-banner/{businessId}.',
+        'Retrieves event banners associated with a business.',
       inputSchema: {
         businessId: z.number().int().positive().describe('Business ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

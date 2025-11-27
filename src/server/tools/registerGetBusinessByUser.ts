@@ -12,7 +12,7 @@ export function registerGetBusinessByUser(server: McpServer, client: ArobidClien
     'getBusinessByUser',
     {
       title: 'Get Business By User',
-      description: 'Retrieves businesses associated with the current user via /tradexpo/api/business/business-by-user.',
+      description: 'Retrieves businesses associated with the current user.',
       inputSchema: {
         language: z.string().optional().describe('Language header (default: en)'),
         currencyId: z

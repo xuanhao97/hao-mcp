@@ -13,7 +13,7 @@ export function registerUpgradeWorkspacePackage(server: McpServer, client: Arobi
     {
       title: 'Upgrade Workspace Package',
       description:
-        'Calls /tradexpo/api/workspace/upgrade-package to upgrade package subscriptions.',
+        'Upgrades package subscriptions.',
       inputSchema: {
         id: z.number().int().positive().optional().describe('Subscription ID'),
         currencyId: z.number().int().positive().optional().describe('Currency query parameter'),

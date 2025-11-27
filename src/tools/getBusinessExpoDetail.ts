@@ -130,7 +130,7 @@ function buildQuery(input: GetBusinessExpoDetailInput): string {
 }
 
 /**
- * Calls /tradexpo/api/v1/event/get-detail-business-expo-by-id/{businessId}
+ * Gets business detail for an event
  */
 export async function getBusinessExpoDetail(
   client: ArobidClient,

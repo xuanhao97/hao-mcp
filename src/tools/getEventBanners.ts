@@ -84,7 +84,7 @@ function buildHeaders(input: GetEventBannersInput): Record<string, string> {
 }
 
 /**
- * Retrieves banner assets exposed via /tradexpo/api/v1/event/banners
+ * Retrieves banner assets for events
  */
 export async function getEventBanners(
   client: ArobidClient,

@@ -16,7 +16,7 @@ export function registerGetWorkspaceEventLimitBusiness(
     {
       title: 'Get Workspace Event Limit Business',
       description:
-        'Retrieves event participation limits via /tradexpo/api/workspace/get-event-limit-business.',
+        'Retrieves event participation limits.',
       inputSchema: {
         eventId: z.number().int().positive().optional().describe('Event ID in request body'),
         businessId: z.number().int().positive().optional().describe('Business ID in request body'),

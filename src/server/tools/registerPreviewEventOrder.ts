@@ -48,7 +48,7 @@ export function registerPreviewEventOrder(server: McpServer, client: ArobidClien
     {
       title: 'Preview Event Order',
       description:
-        'Calls /tradexpo/api/event/preview-order to calculate order totals before submitting.',
+        'Calculates order totals before submitting.',
       inputSchema: submitFormSchema,
     },
     async (args) => {

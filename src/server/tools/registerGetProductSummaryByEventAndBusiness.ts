@@ -16,7 +16,7 @@ export function registerGetProductSummaryByEventAndBusiness(
     {
       title: 'Get Product Summary (Event + Business)',
       description:
-        'Returns product stats for a particular business within an event via /tradexpo/api/event/get-product-summary-by-event-and-business/event/{eventId}/business/{businessId}.',
+        'Returns product stats for a particular business within an event.',
       inputSchema: {
         eventId: z.number().int().positive().describe('ID of the event (path parameter)'),
         businessId: z.number().int().positive().describe('Business ID (path parameter)'),

@@ -28,7 +28,7 @@ export function registerGetWorkspaceProductsOfBusiness(
     'getWorkspaceProductsOfBusiness',
     {
       title: 'Get Workspace Products Of Business',
-      description: 'Retrieves products of a business via /tradexpo/api/workspace/get-products-of-business.',
+      description: 'Retrieves products of a business.',
       inputSchema: {
         ...productsSchema,
         language: z.string().optional().describe('Language header (default: en)'),

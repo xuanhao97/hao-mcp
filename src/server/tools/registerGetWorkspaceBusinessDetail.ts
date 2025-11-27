@@ -16,7 +16,7 @@ export function registerGetWorkspaceBusinessDetail(
     {
       title: 'Get Workspace Business Detail',
       description:
-        'Retrieves business details for a given event inside the organizer workspace via /tradexpo/api/workspace/get-detail-business/{eventId}.',
+        'Retrieves business details for a given event inside the organizer workspace.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         businessId: z

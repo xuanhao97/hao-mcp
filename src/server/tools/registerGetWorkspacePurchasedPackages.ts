@@ -16,7 +16,7 @@ export function registerGetWorkspacePurchasedPackages(
     {
       title: 'Get Workspace Purchased Packages',
       description:
-        'Retrieves purchased packages via /tradexpo/api/workspace/get-all-purchased/{eventId}.',
+        'Retrieves purchased packages.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

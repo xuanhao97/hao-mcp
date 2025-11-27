@@ -12,7 +12,7 @@ export function registerGetWorkspaceMainPackages(server: McpServer, client: Arob
     'getWorkspaceMainPackages',
     {
       title: 'Get Workspace Main Packages',
-      description: 'Retrieves main packages via /tradexpo/api/workspace/get-all-main/{eventId}.',
+      description: 'Retrieves main packages.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

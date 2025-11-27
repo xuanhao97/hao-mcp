@@ -102,7 +102,6 @@ export async function confirmResetPassword(
     // Log request details (without password and OTP)
     console.error(
       `[confirmResetPassword] API Request:\n` +
-        `  Endpoint: ${endpoint}\n` +
         `  Payload: ${JSON.stringify({ ...payload, password: '***REDACTED***', otp: '***REDACTED***' }, null, 2)}`
     );
 

@@ -16,7 +16,7 @@ export function registerGetEventBusinessProductSummary(
     {
       title: 'Get Event Business/Product Summary',
       description:
-        'Fetches aggregate counts of businesses and products inside an event via /tradexpo/api/event/get-business-and-product-summary/{eventId}.',
+        'Fetches aggregate counts of businesses and products inside an event.',
       inputSchema: {
         eventId: z.number().int().positive().describe('ID of the event'),
         language: z.string().optional().describe('Language header (default: en)'),

@@ -12,7 +12,7 @@ export function registerGetWorkspaceExtraPackages(server: McpServer, client: Aro
     'getWorkspaceExtraPackages',
     {
       title: 'Get Workspace Extra Packages',
-      description: 'Retrieves add-on packages via /tradexpo/api/workspace/get-all-extra/{eventId}.',
+      description: 'Retrieves add-on packages.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

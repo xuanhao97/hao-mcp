@@ -12,7 +12,7 @@ export function registerGetCategoriesV2(server: McpServer, client: ArobidClient)
     'getCategoriesV2',
     {
       title: 'Get Categories V2',
-      description: 'Retrieves categories via /tradexpo/api/category/get-all-categories-v2.',
+      description: 'Retrieves categories.',
       inputSchema: {
         id: z.number().int().positive().optional().describe('Specific category ID'),
         level: z.number().int().optional().describe('Category level'),

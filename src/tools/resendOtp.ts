@@ -62,7 +62,6 @@ export async function resendOtp(
     // Log request details
     console.error(
       `[resendOtp] API Request:\n` +
-        `  Endpoint: ${endpoint}\n` +
         `  Payload: ${JSON.stringify(payload, null, 2)}`
     );
 

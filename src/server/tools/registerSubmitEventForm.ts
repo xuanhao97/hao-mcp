@@ -47,7 +47,7 @@ export function registerSubmitEventForm(server: McpServer, client: ArobidClient)
     'submitEventForm',
     {
       title: 'Submit Event Form',
-      description: 'Submits the event registration/order form via /tradexpo/api/event/submit-form.',
+      description: 'Submits the event registration/order form.',
       inputSchema: submitFormSchema,
     },
     async (args) => {

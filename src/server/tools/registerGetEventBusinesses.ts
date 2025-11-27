@@ -13,7 +13,7 @@ export function registerGetEventBusinesses(server: McpServer, client: ArobidClie
     {
       title: 'Get Event Businesses',
       description:
-        'Retrieves exhibitors for a specific event via /tradexpo/api/v1/event/get-business-by-event-id-mul-for-view-all.',
+        'Retrieves exhibitors for a specific event.',
       inputSchema: {
         id: z
           .number()

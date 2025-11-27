@@ -16,7 +16,7 @@ export function registerGetWorkspaceEventDetail(
     {
       title: 'Get Workspace Event Detail',
       description:
-        'Retrieves event details scoped to the workspace via /tradexpo/api/workspace/get-detail-event/{id}.',
+        'Retrieves event details scoped to the workspace.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

@@ -13,7 +13,7 @@ export function registerAddWorkspaceProduct(server: McpServer, client: ArobidCli
     {
       title: 'Add Workspace Product',
       description:
-        'Adds products to a business within the workspace via /tradexpo/api/workspace/add-product.',
+        'Adds products to a business within the workspace.',
       inputSchema: {
         businessId: z.number().int().positive().describe('Business ID'),
         eventId: z.number().int().positive().describe('Event ID'),

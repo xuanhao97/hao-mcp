@@ -35,29 +35,19 @@ function extractConfigFromQueryParams(requestUrl: string): CreateArobidClientOpt
     const url = new URL(requestUrl);
     const params = url.searchParams;
 
-    const getParam = (...names: string[]): string | undefined => {
-      for (const name of names) {
-        const value = params.get(name);
-        if (value) {
-          return value;
-        }
-      }
-      return undefined;
-    };
-
     const config: CreateArobidClientOptions = {};
 
-    const baseUrl = getParam('backendUrl', 'baseUrl', 'url', 'arobidBackendUrl', 'arobid_backend_url');
+    const baseUrl = params.get('arobid_backend_url');
     if (baseUrl) {
       config.baseUrl = baseUrl;
     }
 
-    const apiKey = getParam('apiKey', 'arobidApiKey', 'api_key');
+    const apiKey = params.get('api_key');
     if (apiKey) {
       config.apiKey = apiKey;
     }
 
-    const tenantId = getParam('tenantId', 'arobidTenantId', 'tenant_id');
+    const tenantId = params.get('tenant_id');
     if (tenantId) {
       config.tenantId = tenantId;
     }

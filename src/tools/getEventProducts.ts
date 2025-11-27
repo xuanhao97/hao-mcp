@@ -220,7 +220,7 @@ function buildQuery(input: GetEventProductsInput): string {
 }
 
 /**
- * Calls /tradexpo/api/v1/event/get-product-by-event-id-mul-for-view-all
+ * Gets products for a specific event
  */
 export async function getEventProducts(
   client: ArobidClient,

@@ -16,7 +16,7 @@ export function registerUnsubscribeWorkspacePackage(
     {
       title: 'Unsubscribe Workspace Package',
       description:
-        'Unsubscribes a package via /tradexpo/api/workspace/unsubscribe/{id}.',
+        'Unsubscribes a package.',
       inputSchema: {
         id: z.number().int().positive().describe('Subscription ID'),
         language: z.string().optional().describe('Language header (default: en)'),

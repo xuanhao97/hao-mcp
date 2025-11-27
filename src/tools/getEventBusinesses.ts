@@ -175,7 +175,7 @@ function buildQueryString(input: GetEventBusinessesInput): string {
 }
 
 /**
- * Calls /tradexpo/api/v1/event/get-business-by-event-id-mul-for-view-all
+ * Gets businesses for a specific event
  */
 export async function getEventBusinesses(
   client: ArobidClient,

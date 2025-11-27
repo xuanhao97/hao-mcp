@@ -16,7 +16,7 @@ export function registerGetWorkspaceRegistrationDetail(
     {
       title: 'Get Workspace Registration Detail',
       description:
-        'Retrieves registration detail via /tradexpo/api/workspace/get-detail-registration/{id}.',
+        'Retrieves registration detail.',
       inputSchema: {
         registrationId: z.number().int().positive().describe('Registration ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

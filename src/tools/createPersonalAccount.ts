@@ -153,7 +153,6 @@ export async function createPersonalAccount(
   const validatedInput = validateInput(input);
 
   try {
-    // TODO: Verify the exact endpoint path for account creation
     const endpoint = '/b2b/api/user/create_user_for_sign_up_async';
 
     // Prepare request payload matching the API structure
@@ -180,7 +179,6 @@ export async function createPersonalAccount(
     };
     console.error(
       `[createPersonalAccount] API Request:\n` +
-        `  Endpoint: ${endpoint}\n` +
         `  Payload: ${JSON.stringify(logPayload, null, 2)}`
     );
 

@@ -72,7 +72,6 @@ export async function verifyUser(
     // Log request details
     console.error(
       `[verifyUser] API Request:\n` +
-        `  Endpoint: ${endpoint}\n` +
         `  Payload: ${JSON.stringify({ ...payload, otp: '***REDACTED***' }, null, 2)}`
     );
 

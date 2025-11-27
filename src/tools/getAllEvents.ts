@@ -191,7 +191,7 @@ function buildPayload(input: EventFiltersInput): Record<string, unknown> {
 }
 
 /**
- * Calls /tradexpo/api/v1/event/get-all-event with the provided filters
+ * Gets all events with the provided filters
  */
 export async function getAllEvents(
   client: ArobidClient,

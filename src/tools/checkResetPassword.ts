@@ -76,7 +76,6 @@ export async function checkResetPassword(
     // Log request details
     console.error(
       `[checkResetPassword] API Request:\n` +
-        `  Endpoint: ${endpoint}\n` +
         `  Payload: ${JSON.stringify(payload, null, 2)}`
     );
 

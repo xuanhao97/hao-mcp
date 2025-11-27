@@ -31,7 +31,7 @@ export function registerGetWorkspaceEvents(server: McpServer, client: ArobidClie
     {
       title: 'Get Workspace Events',
       description:
-        'Retrieves events available to a business via /tradexpo/api/workspace/get-all-event.',
+        'Retrieves events available to a business.',
       inputSchema: {
         businessId: z.number().int().positive().describe('BusinessId query parameter (required)'),
         ...commonFilters,

@@ -71,7 +71,6 @@ export async function userLogin(
   // Log request details (without password)
   console.error(
     `[userLogin] API Request:\n` +
-      `  Endpoint: ${endpoint}\n` +
       `  Payload: ${JSON.stringify({ ...payload, password: '***REDACTED***' }, null, 2)}`
   );
 

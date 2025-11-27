@@ -13,7 +13,7 @@ export function registerUpdateWorkspaceProduct(server: McpServer, client: Arobid
     {
       title: 'Update Workspace Product',
       description:
-        'Updates products assigned to a business via /tradexpo/api/workspace/update-product.',
+        'Updates products assigned to a business.',
       inputSchema: {
         businessId: z.number().int().positive().describe('Business ID'),
         eventId: z.number().int().positive().describe('Event ID'),

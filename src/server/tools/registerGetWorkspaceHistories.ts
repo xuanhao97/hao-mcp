@@ -25,7 +25,7 @@ export function registerGetWorkspaceHistories(server: McpServer, client: ArobidC
     'getWorkspaceHistories',
     {
       title: 'Get Workspace Histories',
-      description: 'Retrieves workspace histories via /tradexpo/api/workspace/get-histories.',
+      description: 'Retrieves workspace histories.',
       inputSchema: {
         ...historiesSchema,
         language: z.string().optional().describe('Language header (default: en)'),

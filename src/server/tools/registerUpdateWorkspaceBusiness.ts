@@ -21,7 +21,7 @@ export function registerUpdateWorkspaceBusiness(server: McpServer, client: Arobi
     {
       title: 'Update Workspace Business',
       description:
-        'Updates business profile fields via /tradexpo/api/workspace/update-business.',
+        'Updates business profile fields.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID'),
         expoBusinessId: z.number().int().positive().describe('Expo business ID'),

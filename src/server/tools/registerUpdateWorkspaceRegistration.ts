@@ -16,7 +16,7 @@ export function registerUpdateWorkspaceRegistration(
     {
       title: 'Update Workspace Registration',
       description:
-        'Updates registration forms via /tradexpo/api/workspace/update-form-registration.',
+        'Updates registration forms.',
       inputSchema: {
         id: z.number().int().positive().describe('Registration ID'),
         prefix: z.string().min(1).describe('Contact prefix'),

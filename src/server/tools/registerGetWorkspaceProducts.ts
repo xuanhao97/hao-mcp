@@ -25,7 +25,7 @@ export function registerGetWorkspaceProducts(server: McpServer, client: ArobidCl
     'getWorkspaceProducts',
     {
       title: 'Get Workspace Products',
-      description: 'Retrieves products via /tradexpo/api/workspace/get-all-products.',
+      description: 'Retrieves products.',
       inputSchema: {
         ...productsFilters,
         language: z.string().optional().describe('Language header (default: en)'),
