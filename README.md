@@ -155,8 +155,7 @@ arobid-mcp/
 │   │       ├── registerConfirmResetPassword.ts
 │   │       ├── registerSearchEvents.ts
 │   │       ├── registerSearchBusinessesInEvent.ts
-│   │       ├── registerSearchBusinessesInMultipleEvents.ts
-│   │       └── registerFindBusinessEventParticipation.ts
+│   │       └── registerSearchBusinessesInMultipleEvents.ts
 │   └── tools/
 │       ├── createPersonalAccount.ts  # Create account tool
 │       ├── userLogin.ts         # User login tool
@@ -166,8 +165,7 @@ arobid-mcp/
 │       ├── confirmResetPassword.ts # Confirm reset password tool
 │       ├── searchEvents.ts      # Search events/exhibitions tool
 │       ├── searchBusinessesInEvent.ts
-│       ├── searchBusinessesInMultipleEvents.ts
-│       └── findBusinessEventParticipation.ts
+│       └── searchBusinessesInMultipleEvents.ts
 ├── api/
 │   └── server.ts                # Vercel API route handler (HTTP transport)
 ├── dist/                        # Compiled JavaScript (generated)
@@ -418,34 +416,6 @@ Batched variant of the previous tool. Provide an array of event IDs plus an opti
 - Execution metadata (events processed, batches processed, summary text)
 
 Use this to quickly check whether a vendor appears in any of a curated list of events.
-
-### `findBusinessEventParticipation`
-
-Answers questions like “Doanh nghiệp An Thái đã tham gia sự kiện nào của Arobid?”. The tool can:
-
-1. Discover relevant events automatically using an optional `eventSearch` term (or accept explicit `eventIds`)
-2. Limit discovery by `maxEvents`, page size, sorting, language, and currency
-3. Run a batch exhibitor search across those events for the provided `businessName`
-4. Return only the events where the business actually appears (with matched exhibitor entries and event metadata)
-
-**Example:**
-
-```json
-{
-  "businessName": "An Thái",
-  "eventSearch": "food",
-  "maxEvents": 150,
-  "language": "vi"
-}
-```
-
-**Sample response fields:**
-
-- `matchedEvents`: array of `{ eventId, eventName, startTime, matchedBusinesses }`
-- `unmatchedEventIds`: events that were scanned but did not contain the business
-- `searchContext`: shows discovery/search parameters, aiding reproducibility
-
-Tip: Provide `eventIds` when you already know which exhibitions to inspect; skip them to let the tool discover events automatically.
 
 ## MCP Server Integration
 

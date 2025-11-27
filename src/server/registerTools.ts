@@ -18,7 +18,6 @@ import { registerConfirmResetPassword } from './tools/registerConfirmResetPasswo
 import { registerSearchEvents } from './tools/registerSearchEvents.js';
 import { registerSearchBusinessesInEvent } from './tools/registerSearchBusinessesInEvent.js';
 import { registerSearchBusinessesInMultipleEvents } from './tools/registerSearchBusinessesInMultipleEvents.js';
-import { registerFindBusinessEventParticipation } from './tools/registerFindBusinessEventParticipation.js';
 import { registerGetEventDetail } from './tools/registerGetEventDetail.js';
 
 /**
@@ -37,7 +36,6 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   registerSearchEvents(server, client);
   registerSearchBusinessesInEvent(server, client);
   registerSearchBusinessesInMultipleEvents(server, client);
-  registerFindBusinessEventParticipation(server, client);
   registerGetEventDetail(server, client);
 }
 
