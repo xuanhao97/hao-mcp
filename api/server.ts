@@ -13,6 +13,7 @@ import {
   createArobidClient,
   extractConfigFromHeaders,
   ArobidClient,
+  CreateArobidClientOptions,
 } from '../src/client/arobidClient.js';
 import { registerTools } from '../src/server/registerTools.js';
 
@@ -29,15 +30,60 @@ try {
  * Creates or retrieves the Arobid client for a given request
  * Extracts configuration from headers, falling back to process.env
  */
+function extractConfigFromQueryParams(requestUrl: string): CreateArobidClientOptions {
+  try {
+    const url = new URL(requestUrl);
+    const params = url.searchParams;
+
+    const getParam = (...names: string[]): string | undefined => {
+      for (const name of names) {
+        const value = params.get(name);
+        if (value) {
+          return value;
+        }
+      }
+      return undefined;
+    };
+
+    const config: CreateArobidClientOptions = {};
+
+    const baseUrl = getParam('backendUrl', 'baseUrl', 'url', 'arobidBackendUrl', 'arobid_backend_url');
+    if (baseUrl) {
+      config.baseUrl = baseUrl;
+    }
+
+    const apiKey = getParam('apiKey', 'arobidApiKey', 'api_key');
+    if (apiKey) {
+      config.apiKey = apiKey;
+    }
+
+    const tenantId = getParam('tenantId', 'arobidTenantId', 'tenant_id');
+    if (tenantId) {
+      config.tenantId = tenantId;
+    }
+
+    return config;
+  } catch (error) {
+    console.warn('[Arobid MCP] Failed to parse request URL for query params:', error);
+    return {};
+  }
+}
+
+/**
+ * Creates or retrieves the Arobid client for a given request
+ * Extracts configuration from headers, query parameters, falling back to process.env
+ */
 function getClientForRequest(request: Request): ArobidClient {
   // Extract configuration from request headers
   const headerConfig = extractConfigFromHeaders(request.headers);
+  const queryConfig = extractConfigFromQueryParams(request.url);
+  const mergedConfig = { ...headerConfig, ...queryConfig };
 
   // Create client from headers (if provided) or fall back to default client
   try {
-    if (Object.keys(headerConfig).length > 0) {
-      // Use header config, falling back to process.env for missing values
-      return createArobidClient(headerConfig);
+    if (Object.keys(mergedConfig).length > 0) {
+      // Use request config, falling back to process.env for missing values
+      return createArobidClient(mergedConfig);
     } else if (defaultClient) {
       // Use default client from process.env
       return defaultClient;
