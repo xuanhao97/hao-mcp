@@ -1,6 +1,6 @@
 /**
  * MCP tool for searching businesses across multiple events on Arobid platform
- * Processes events in batches of 10 to efficiently search businesses
+ * Processes events in batches and returns raw API responses for AI to process and make decisions
  */
 
 import { ArobidClient, ArobidError } from '../client/arobidClient.js';
@@ -29,17 +29,13 @@ export interface SearchBusinessesInMultipleEventsInput {
 
 /**
  * Response from searching businesses in multiple events
+ * Returns raw data for AI to process and make decisions
  */
 export interface SearchBusinessesInMultipleEventsResponse {
-  businesses: unknown[];
-  totalBusinesses: number;
+  resultsByEvent: Record<string, SearchBusinessesInEventResponse>;
   eventsProcessed: number;
-  batchesProcessed: number;
-  resultsByEvent: Record<string, unknown[]>;
-  searchTerm?: string;
-  found: boolean;
-  businessNames: string[];
-  summary: string;
+  totalEvents: number;
+  failedEvents: string[];
   [key: string]: unknown;
 }
 
@@ -182,26 +178,10 @@ function validateInput(input: unknown): SearchBusinessesInMultipleEventsInput {
   return result;
 }
 
-/**
- * Gets the businesses array from response
- * The API always returns businesses in the 'data.results' field
- */
-function getBusinessesArray(response: SearchBusinessesInEventResponse): unknown[] {
-  // The API response structure always has results as an array inside data
-  if (response.data && Array.isArray(response.data.results)) {
-    return response.data.results;
-  }
-
-  // Fallback: if results is missing or not an array, log and return empty array
-  console.error(
-    `[getBusinessesArray] Expected 'data.results' array in response but got: ${typeof response.data?.results}. Response keys: ${Object.keys(response).join(', ')}`
-  );
-  return [];
-}
 
 /**
  * Searches for businesses across multiple events on Arobid platform
- * Processes events in batches of 10 to efficiently search businesses
+ * Processes events in batches and returns raw data for AI to process
  */
 export async function searchBusinessesInMultipleEvents(
   client: ArobidClient,
@@ -212,19 +192,18 @@ export async function searchBusinessesInMultipleEvents(
 
   try {
     const eventIds = validatedInput.eventIds;
-    const batchSize = 20; // Increased batch size for faster processing
+    const batchSize = 20;
     const totalEvents = eventIds.length;
 
-    const allBusinesses: unknown[] = [];
-    const resultsByEvent: Record<string, unknown[]> = {};
+    const resultsByEvent: Record<string, SearchBusinessesInEventResponse> = {};
+    const failedEvents: string[] = [];
     let eventsProcessed = 0;
-    let batchesProcessed = 0;
 
-    // Process events in batches of 10
+    // Process events in batches
     for (let i = 0; i < totalEvents; i += batchSize) {
       const batch = eventIds.slice(i, i + batchSize);
 
-      // Process each event in the batch
+      // Process each event in the batch concurrently
       const batchPromises = batch.map(async (eventId) => {
         try {
           // Build input for searchBusinessesInEvent
@@ -243,81 +222,40 @@ export async function searchBusinessesInMultipleEvents(
           };
 
           const response = await searchBusinessesInEvent(client, eventInput);
-          const businesses = getBusinessesArray(response);
-
-          return { eventId, businesses, success: true };
+          return { eventId, response, success: true };
         } catch (error) {
-          // Silently skip failed events to speed up processing
-          return { eventId, businesses: [], success: false };
+          console.error(`[searchBusinessesInMultipleEvents] Failed to search event ${eventId}:`, error);
+          return { eventId, response: null, success: false };
         }
       });
 
-      // Wait for all events in the batch to complete (using allSettled to handle individual failures)
-      // This ensures that if one event fails, others can still succeed and return results
-      const batchSettledResults = await Promise.allSettled(batchPromises);
-
-      // Extract results from settled promises
-      const batchResults = batchSettledResults.map((settledResult, index) => {
-        if (settledResult.status === 'fulfilled') {
-          return settledResult.value;
-        } else {
-          // Silently handle promise rejections
-          const eventId = batch[index] || 'unknown';
-          return { eventId, businesses: [], success: false };
-        }
-      });
+      // Wait for all events in the batch to complete
+      const batchResults = await Promise.allSettled(batchPromises);
 
       // Collect results
-      for (const result of batchResults) {
-        if (result.success) {
-          allBusinesses.push(...result.businesses);
-          resultsByEvent[result.eventId] = result.businesses;
-          eventsProcessed++;
-        }
-      }
-
-      batchesProcessed++;
-    }
-
-    // Only extract business names if search term is provided (for quick reference)
-    const businessNames: string[] = [];
-    const searchTerm = validatedInput.search || '';
-    const found = allBusinesses.length > 0;
-
-    // Only extract names if we have a search term and results (for quick verification)
-    if (searchTerm && found && allBusinesses.length <= 50) {
-      for (const business of allBusinesses) {
-        if (business && typeof business === 'object') {
-          const biz = business as Record<string, unknown>;
-          const name =
-            biz.name ||
-            biz.businessName ||
-            biz.companyName ||
-            biz.title ||
-            biz.fullName ||
-            biz.organizationName;
-          if (name && typeof name === 'string') {
-            businessNames.push(name);
+      for (const settledResult of batchResults) {
+        if (settledResult.status === 'fulfilled') {
+          const result = settledResult.value;
+          if (result.success && result.response) {
+            resultsByEvent[result.eventId] = result.response;
+            eventsProcessed++;
+          } else {
+            failedEvents.push(result.eventId);
           }
+        } else {
+          // Handle promise rejection
+          const eventId = batch[batchResults.indexOf(settledResult)] || 'unknown';
+          failedEvents.push(eventId);
         }
       }
     }
 
-    // Minimal summary for performance
-    const summary = found
-      ? `Found ${allBusinesses.length} business(es)${searchTerm ? ` matching "${searchTerm}"` : ''}`
-      : `No businesses found${searchTerm ? ` matching "${searchTerm}"` : ''} across ${eventsProcessed} event(s)`;
-
+    // Return raw data for AI to process
     const response: SearchBusinessesInMultipleEventsResponse = {
-      businesses: allBusinesses,
-      totalBusinesses: allBusinesses.length,
-      eventsProcessed,
-      batchesProcessed,
       resultsByEvent,
-      searchTerm: validatedInput.search,
-      found,
-      businessNames,
-      summary,
+      eventsProcessed,
+      totalEvents,
+      failedEvents,
     };
 
     return response;

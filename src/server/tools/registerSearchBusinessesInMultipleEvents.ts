@@ -21,7 +21,7 @@ export function registerSearchBusinessesInMultipleEvents(
     {
       title: 'Search Businesses in Multiple Events',
       description:
-        'Searches for businesses across multiple events/exhibitions on Arobid platform. Processes events in batches of 10 for efficient searching. Reuses the single event search functionality.',
+        'Searches for businesses across multiple events/exhibitions on Arobid platform. Processes events in batches and returns raw data for AI to process and make decisions. Each event result contains the full API response structure.',
       inputSchema: {
         eventIds: z
           .array(z.string().min(1))
@@ -64,37 +64,34 @@ export function registerSearchBusinessesInMultipleEvents(
       },
     },
     async (args) => {
-      try {
-        // Args are already validated by Zod schema, so we can pass them directly
-        const result = await searchBusinessesInMultipleEvents(client, args);
+      console.error('[Arobid MCP] Tool called: searchBusinessesInMultipleEvents', args);
+      const startTime = Date.now();
 
-        // Return raw data directly for faster processing - no formatting needed
-        // The AI can process the structured data directly
+      try {
+        const result = await searchBusinessesInMultipleEvents(client, args);
+        console.error(
+          `[Arobid MCP] Tool execution completed: searchBusinessesInMultipleEvents (${Date.now() - startTime}ms)`
+        );
+
+        // Return raw data for AI to process and make decisions
         return {
           content: [
             {
               type: 'text',
-              text: JSON.stringify({
-                found: result.found,
-                totalBusinesses: result.totalBusinesses,
-                eventsProcessed: result.eventsProcessed,
-                searchTerm: result.searchTerm,
-                businesses: result.businesses,
-                resultsByEvent: result.resultsByEvent,
-                summary: result.summary,
-              }, null, 2),
+              text: JSON.stringify(result, null, 2),
             },
           ],
         };
       } catch (error) {
-        // Convert errors to MCP-friendly format
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        console.error(
+          `[Arobid MCP] Tool execution error: searchBusinessesInMultipleEvents (${Date.now() - startTime}ms): ${message}`
+        );
         return {
           content: [
             {
               type: 'text',
-              text: JSON.stringify({ error: errorMessage }, null, 2),
+              text: JSON.stringify({ error: message }, null, 2),
             },
           ],
           isError: true,
