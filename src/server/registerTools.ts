@@ -16,6 +16,7 @@ import { registerResendOtp } from './tools/registerResendOtp.js';
 import { registerCheckResetPassword } from './tools/registerCheckResetPassword.js';
 import { registerConfirmResetPassword } from './tools/registerConfirmResetPassword.js';
 import { registerSearchEvents } from './tools/registerSearchEvents.js';
+import { registerSearchBusinessesInEvent } from './tools/registerSearchBusinessesInEvent.js';
 
 /**
  * Registers all MCP tools on the given server instance
@@ -31,5 +32,6 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   registerCheckResetPassword(server, client);
   registerConfirmResetPassword(server, client);
   registerSearchEvents(server, client);
+  registerSearchBusinessesInEvent(server, client);
 }
 

@@ -106,12 +106,16 @@ export class ArobidClient {
 
   /**
    * Performs a POST request
+   * @param path - The API path
+   * @param data - The request body data
+   * @param customHeaders - Optional custom headers to merge with default headers
    */
-  async post<T>(path: string, data: unknown): Promise<T> {
+  async post<T>(path: string, data: unknown, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseUrl}${path}`;
+    const headers = { ...this.getHeaders(), ...customHeaders };
     const response = await fetch(url, {
       method: 'POST',
-      headers: this.getHeaders(),
+      headers,
       body: JSON.stringify(data),
     });
 
@@ -126,7 +130,10 @@ export class ArobidClient {
    * Performs a POST request and returns the response body even if status is not ok
    * Useful for cases where error responses contain important information
    */
-  async postWithErrorBody<T>(path: string, data: unknown): Promise<{ body: T; status: number; ok: boolean }> {
+  async postWithErrorBody<T>(
+    path: string,
+    data: unknown
+  ): Promise<{ body: T; status: number; ok: boolean }> {
     const url = `${this.baseUrl}${path}`;
     const response = await fetch(url, {
       method: 'POST',
@@ -134,7 +141,7 @@ export class ArobidClient {
       body: JSON.stringify(data),
     });
 
-    const body = await response.json() as T;
+    const body = (await response.json()) as T;
     return {
       body,
       status: response.status,
@@ -235,7 +242,9 @@ export function createArobidClient(options?: CreateArobidClientOptions): ArobidC
  * - X-Arobid-Api-Key (or x-arobid-api-key)
  * - X-Arobid-Tenant-Id (or x-arobid-tenant-id)
  */
-export function extractConfigFromHeaders(headers: Headers | Record<string, string>): CreateArobidClientOptions {
+export function extractConfigFromHeaders(
+  headers: Headers | Record<string, string>
+): CreateArobidClientOptions {
   const getHeader = (name: string, altName?: string): string | undefined => {
     if (headers instanceof Headers) {
       return headers.get(name) || headers.get(altName || name.toLowerCase()) || undefined;
