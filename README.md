@@ -6,7 +6,7 @@ MCP (Model Context Protocol) server that connects to **Arobid Backend**, allowin
 
 Arobid MCP provides a standardized interface for interacting with Arobid Backend services through the Model Context Protocol. This enables AI assistants and development tools to seamlessly integrate with Arobid's backend capabilities.
 
-The server currently provides **7 comprehensive tools** covering account management, authentication, password reset workflows, and event search. All tools include robust input validation, error handling, and detailed logging.
+The server currently provides **10+ comprehensive tools** covering account management, authentication, password reset workflows, exhibitor discovery, and event search. All tools include robust input validation, error handling, and detailed logging.
 
 ## Features
 
@@ -28,6 +28,9 @@ The server currently provides **7 comprehensive tools** covering account managem
 ### Events & Exhibitions
 
 - ✅ **Search Events** - Search for active exhibitions/events on Arobid platform. Automatically crawls all pages to retrieve complete results. Supports filtering, pagination, sorting, and localization.
+- ✅ **Search Businesses In Event** - Inspect exhibitors within a single event.
+- ✅ **Search Businesses In Multiple Events** - Batch exhibitor search across many events at once.
+- ✅ **Find Business Event Participation** - Discover which events a specific business has joined by combining event discovery with batch exhibitor lookups.
 
 ### Coming Soon
 
@@ -150,7 +153,10 @@ arobid-mcp/
 │   │       ├── registerResendOtp.ts
 │   │       ├── registerCheckResetPassword.ts
 │   │       ├── registerConfirmResetPassword.ts
-│   │       └── registerSearchEvents.ts
+│   │       ├── registerSearchEvents.ts
+│   │       ├── registerSearchBusinessesInEvent.ts
+│   │       ├── registerSearchBusinessesInMultipleEvents.ts
+│   │       └── registerFindBusinessEventParticipation.ts
 │   └── tools/
 │       ├── createPersonalAccount.ts  # Create account tool
 │       ├── userLogin.ts         # User login tool
@@ -158,7 +164,10 @@ arobid-mcp/
 │       ├── resendOtp.ts         # Resend OTP tool
 │       ├── checkResetPassword.ts # Check/reset password tool
 │       ├── confirmResetPassword.ts # Confirm reset password tool
-│       └── searchEvents.ts      # Search events/exhibitions tool
+│       ├── searchEvents.ts      # Search events/exhibitions tool
+│       ├── searchBusinessesInEvent.ts
+│       ├── searchBusinessesInMultipleEvents.ts
+│       └── findBusinessEventParticipation.ts
 ├── api/
 │   └── server.ts                # Vercel API route handler (HTTP transport)
 ├── dist/                        # Compiled JavaScript (generated)
@@ -386,6 +395,57 @@ The response includes:
   - `totalEvents`: Total number of events retrieved
 
 **Note**: This tool will automatically crawl through all available pages until no more events are found. The process may take longer for large result sets, but ensures you receive complete results in a single response. The tool includes a safety limit of 1000 pages to prevent infinite loops.
+
+### `searchBusinessesInEvent`
+
+Searches exhibitors/businesses inside a single event by ID. Supports paging, sorting, localization, and filtering (origin country, national code, business categories, etc.). Use this when you already know the event ID and want the raw exhibitor roster.
+
+**Minimal example:**
+
+```json
+{
+  "eventId": "123",
+  "search": "coffee"
+}
+```
+
+### `searchBusinessesInMultipleEvents`
+
+Batched variant of the previous tool. Provide an array of event IDs plus an optional search term, and the tool scans each event concurrently (20 events per batch). The response contains:
+
+- `businesses`: flattened list of all matches
+- `resultsByEvent`: object keyed by event IDs so you can inspect per-event matches
+- Execution metadata (events processed, batches processed, summary text)
+
+Use this to quickly check whether a vendor appears in any of a curated list of events.
+
+### `findBusinessEventParticipation`
+
+Answers questions like “Doanh nghiệp An Thái đã tham gia sự kiện nào của Arobid?”. The tool can:
+
+1. Discover relevant events automatically using an optional `eventSearch` term (or accept explicit `eventIds`)
+2. Limit discovery by `maxEvents`, page size, sorting, language, and currency
+3. Run a batch exhibitor search across those events for the provided `businessName`
+4. Return only the events where the business actually appears (with matched exhibitor entries and event metadata)
+
+**Example:**
+
+```json
+{
+  "businessName": "An Thái",
+  "eventSearch": "food",
+  "maxEvents": 150,
+  "language": "vi"
+}
+```
+
+**Sample response fields:**
+
+- `matchedEvents`: array of `{ eventId, eventName, startTime, matchedBusinesses }`
+- `unmatchedEventIds`: events that were scanned but did not contain the business
+- `searchContext`: shows discovery/search parameters, aiding reproducibility
+
+Tip: Provide `eventIds` when you already know which exhibitions to inspect; skip them to let the tool discover events automatically.
 
 ## MCP Server Integration
 

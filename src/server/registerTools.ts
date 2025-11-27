@@ -17,6 +17,8 @@ import { registerCheckResetPassword } from './tools/registerCheckResetPassword.j
 import { registerConfirmResetPassword } from './tools/registerConfirmResetPassword.js';
 import { registerSearchEvents } from './tools/registerSearchEvents.js';
 import { registerSearchBusinessesInEvent } from './tools/registerSearchBusinessesInEvent.js';
+import { registerSearchBusinessesInMultipleEvents } from './tools/registerSearchBusinessesInMultipleEvents.js';
+import { registerFindBusinessEventParticipation } from './tools/registerFindBusinessEventParticipation.js';
 
 /**
  * Registers all MCP tools on the given server instance
@@ -33,5 +35,7 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   registerConfirmResetPassword(server, client);
   registerSearchEvents(server, client);
   registerSearchBusinessesInEvent(server, client);
+  registerSearchBusinessesInMultipleEvents(server, client);
+  registerFindBusinessEventParticipation(server, client);
 }
 

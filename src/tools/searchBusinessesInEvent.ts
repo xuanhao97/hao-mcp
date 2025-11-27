@@ -24,12 +24,37 @@ export interface SearchBusinessesInEventInput {
 
 /**
  * Response from Arobid Backend after searching businesses in an event
+ * Based on actual API response structure:
+ * {
+ *   data: {
+ *     results: Business[],  // Main array of businesses
+ *     currentPage: number,
+ *     pageCount: number,
+ *     pageSize: number,
+ *     rowCount: number,
+ *     totalElement: number,
+ *     firstRowOnPage: number,
+ *     lastRowOnPage: number
+ *   },
+ *   isSucceeded: boolean
+ * }
  */
 export interface SearchBusinessesInEventResponse {
-  // TODO: Update with actual response structure from Arobid Backend API
-  data?: unknown[];
-  items?: unknown[];
-  businesses?: unknown[];
+  data?: {
+    results?: unknown[]; // Main array of businesses (always present in actual API response)
+    currentPage?: number;
+    pageCount?: number;
+    pageSize?: number;
+    rowCount?: number;
+    totalElement?: number;
+    firstRowOnPage?: number;
+    lastRowOnPage?: number;
+  };
+  isSucceeded?: boolean;
+  // Enhanced fields added by our function
+  found?: boolean;
+  total?: number;
+  // Allow for additional fields
   [key: string]: unknown;
 }
 
@@ -158,6 +183,20 @@ function validateInput(input: unknown): SearchBusinessesInEventInput {
 }
 
 /**
+ * Gets the businesses array from response
+ * The API always returns businesses in the 'data.results' field
+ */
+function getBusinessesArray(response: SearchBusinessesInEventResponse): unknown[] {
+  // The API response structure always has results as an array inside data
+  if (response.data && Array.isArray(response.data.results)) {
+    return response.data.results;
+  }
+
+  // Fallback: if results is missing or not an array, return empty array
+  return [];
+}
+
+/**
  * Searches for businesses in a specific event on Arobid platform
  */
 export async function searchBusinessesInEvent(
@@ -227,16 +266,7 @@ export async function searchBusinessesInEvent(
       customHeaders['language'] = 'en';
     }
 
-    // Log request details
-    console.error(
-      `[searchBusinessesInEvent] API Request:\n` +
-        `  Endpoint: ${endpoint}\n` +
-        `  EventId: ${validatedInput.eventId}\n` +
-        `  Search: ${validatedInput.search || 'N/A'}\n` +
-        `  PageSize: ${validatedInput.pageSize || 1000}\n` +
-        `  PageIndex: ${validatedInput.pageIndex || 1}\n` +
-        `  Payload: ${JSON.stringify(payload, null, 2)}`
-    );
+    // Minimal logging for performance
 
     // Call Arobid Backend API with custom headers
     const response = await client.post<SearchBusinessesInEventResponse>(
@@ -245,37 +275,34 @@ export async function searchBusinessesInEvent(
       customHeaders
     );
 
-    console.error(
-      `[searchBusinessesInEvent] API Response:\n` +
-        `  Status: Success\n` +
-        `  EventId: ${validatedInput.eventId}\n` +
-        `  Response: ${JSON.stringify(response, null, 2)}`
-    );
+    // Extract businesses array from data.results field
+    const businesses = getBusinessesArray(response);
+    const found = businesses.length > 0;
 
-    return response;
+    // Use rowCount from API response as the total, fallback to businesses.length
+    // rowCount represents the actual number of businesses in the current page
+    const totalCount = response.data?.rowCount ?? businesses.length;
+
+    // Add enhanced metadata to response for better clarity
+    const enhancedResponse: SearchBusinessesInEventResponse = {
+      ...response,
+      found,
+      total: totalCount,
+    };
+
+    // Minimal logging for performance
+
+    return enhancedResponse;
   } catch (error) {
     // Handle Arobid-specific errors
     if (error && typeof error === 'object' && 'statusCode' in error) {
       const arobidError = error as ArobidError;
-      console.error(
-        `[searchBusinessesInEvent] API Error:\n` +
-          `  Status Code: ${arobidError.statusCode}\n` +
-          `  Error Code: ${arobidError.code || 'N/A'}\n` +
-          `  Message: ${arobidError.message}\n` +
-          `  EventId: ${validatedInput.eventId}`
-      );
       throw new Error(
         `Failed to search businesses: ${arobidError.message}${arobidError.code ? ` (${arobidError.code})` : ''}`
       );
     }
 
     // Handle network or other errors
-    console.error(
-      `[searchBusinessesInEvent] Unexpected Error:\n` +
-        `  Type: ${error instanceof Error ? error.constructor.name : typeof error}\n` +
-        `  Message: ${error instanceof Error ? error.message : 'Unknown error'}\n` +
-        `  EventId: ${validatedInput.eventId}`
-    );
     throw new Error(
       `Failed to search businesses: ${error instanceof Error ? error.message : 'Unknown error'}`
     );

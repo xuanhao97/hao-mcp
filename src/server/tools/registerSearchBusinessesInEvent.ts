@@ -73,14 +73,64 @@ export function registerSearchBusinessesInEvent(server: McpServer, client: Arobi
         console.error(
           `[Arobid MCP] Tool execution completed: searchBusinessesInEvent\n` +
             `[Arobid MCP] Duration: ${duration}ms\n` +
-            `[Arobid MCP] Result: ${JSON.stringify(result, null, 2)}`
+            `[Arobid MCP] Found: ${result.found}, Total: ${result.total || result.data?.rowCount || 0}`
         );
+
+        // Format response in a concise way for AI Agents to process quickly
+        const businesses = result.data?.results || [];
+        const found = result.found || businesses.length > 0;
+        const total = result.total || result.data?.rowCount || businesses.length;
+        
+        let formattedText = '';
+        
+        if (found && businesses.length > 0) {
+          // Extract business names (limit to 15 for faster processing)
+          const businessNames: string[] = [];
+          for (const business of businesses.slice(0, 15)) {
+            if (business && typeof business === 'object') {
+              const biz = business as Record<string, unknown>;
+              const name =
+                biz.name ||
+                biz.businessName ||
+                biz.companyName ||
+                biz.title ||
+                biz.fullName ||
+                biz.organizationName;
+              if (name && typeof name === 'string') {
+                businessNames.push(name);
+              }
+            }
+          }
+          
+          // Concise summary format for quick AI processing
+          formattedText += `Tìm thấy ${total} doanh nghiệp trong sự kiện ${args.eventId}`;
+          if (args.search) {
+            formattedText += ` (từ khóa: "${args.search}")`;
+          }
+          formattedText += `.\n\n`;
+          
+          if (businessNames.length > 0) {
+            formattedText += `Danh sách doanh nghiệp:\n`;
+            businessNames.forEach((name, index) => {
+              formattedText += `${index + 1}. ${name}\n`;
+            });
+            if (businesses.length > 15) {
+              formattedText += `... và ${businesses.length - 15} doanh nghiệp khác.\n`;
+            }
+          }
+        } else {
+          formattedText += `Không tìm thấy doanh nghiệp nào`;
+          if (args.search) {
+            formattedText += ` với từ khóa "${args.search}"`;
+          }
+          formattedText += ` trong sự kiện ${args.eventId}.`;
+        }
 
         return {
           content: [
             {
               type: 'text',
-              text: JSON.stringify(result, null, 2),
+              text: formattedText,
             },
           ],
         };

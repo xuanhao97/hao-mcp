@@ -1,7 +1,7 @@
 /**
  * Vercel API route handler for MCP server
  * This allows the MCP server to be deployed on Vercel and accessed via HTTP
- * 
+ *
  * Supports environment variables via:
  * 1. Request headers (X-Arobid-Backend-Url, X-Arobid-Api-Key, X-Arobid-Tenant-Id)
  * 2. process.env (AROBID_BACKEND_URL, AROBID_API_KEY, AROBID_TENANT_ID)
@@ -9,7 +9,11 @@
 
 import { createMcpHandler } from 'mcp-handler';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { createArobidClient, extractConfigFromHeaders, ArobidClient } from '../src/client/arobidClient.js';
+import {
+  createArobidClient,
+  extractConfigFromHeaders,
+  ArobidClient,
+} from '../src/client/arobidClient.js';
 import { registerTools } from '../src/server/registerTools.js';
 
 // Try to initialize a default client from process.env (for backward compatibility)
@@ -28,7 +32,7 @@ try {
 function getClientForRequest(request: Request): ArobidClient {
   // Extract configuration from request headers
   const headerConfig = extractConfigFromHeaders(request.headers);
-  
+
   // Create client from headers (if provided) or fall back to default client
   try {
     if (Object.keys(headerConfig).length > 0) {
@@ -65,7 +69,7 @@ function createHandlerWithClient(client: ArobidClient) {
       capabilities: {
         tools: {},
       },
-    },
+    }
   );
 }
 
@@ -75,10 +79,10 @@ function createHandlerWithClient(client: ArobidClient) {
 async function handleRequest(request: Request) {
   // Get client for this request (from headers or process.env)
   const client = getClientForRequest(request);
-  
+
   // Create a handler with this specific client
   const handler = createHandlerWithClient(client);
-  
+
   // Call the handler with the request
   return handler(request);
 }
@@ -96,3 +100,6 @@ export async function DELETE(request: Request) {
   return handleRequest(request);
 }
 
+export async function OPTIONS(request: Request) {
+  return handleRequest(request);
+}
