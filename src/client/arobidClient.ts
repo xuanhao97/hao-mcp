@@ -152,11 +152,11 @@ export class ArobidClient {
   /**
    * Performs a PUT request
    */
-  async put<T>(path: string, data: unknown): Promise<T> {
+  async put<T>(path: string, data: unknown, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseUrl}${path}`;
     const response = await fetch(url, {
       method: 'PUT',
-      headers: this.getHeaders(),
+      headers: { ...this.getHeaders(), ...customHeaders },
       body: JSON.stringify(data),
     });
 
@@ -170,11 +170,11 @@ export class ArobidClient {
   /**
    * Performs a PATCH request
    */
-  async patch<T>(path: string, data: unknown): Promise<T> {
+  async patch<T>(path: string, data: unknown, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseUrl}${path}`;
     const response = await fetch(url, {
       method: 'PATCH',
-      headers: this.getHeaders(),
+      headers: { ...this.getHeaders(), ...customHeaders },
       body: JSON.stringify(data),
     });
 
@@ -188,11 +188,11 @@ export class ArobidClient {
   /**
    * Performs a DELETE request
    */
-  async delete<T>(path: string): Promise<T> {
+  async delete<T>(path: string, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseUrl}${path}`;
     const response = await fetch(url, {
       method: 'DELETE',
-      headers: this.getHeaders(),
+      headers: { ...this.getHeaders(), ...customHeaders },
     });
 
     if (!response.ok) {

@@ -43,6 +43,13 @@ import { registerGetWorkspaceExtraPackages } from './tools/registerGetWorkspaceE
 import { registerGetWorkspacePurchasedPackages } from './tools/registerGetWorkspacePurchasedPackages.js';
 import { registerGetWorkspacePackageItems } from './tools/registerGetWorkspacePackageItems.js';
 import { registerGetWorkspaceEventBanners } from './tools/registerGetWorkspaceEventBanners.js';
+import { registerAddWorkspaceProduct } from './tools/registerAddWorkspaceProduct.js';
+import { registerUpdateWorkspaceProduct } from './tools/registerUpdateWorkspaceProduct.js';
+import { registerDeleteWorkspaceProduct } from './tools/registerDeleteWorkspaceProduct.js';
+import { registerUpdateWorkspaceBusiness } from './tools/registerUpdateWorkspaceBusiness.js';
+import { registerUpdateWorkspaceRegistration } from './tools/registerUpdateWorkspaceRegistration.js';
+import { registerUpgradeWorkspacePackage } from './tools/registerUpgradeWorkspacePackage.js';
+import { registerUnsubscribeWorkspacePackage } from './tools/registerUnsubscribeWorkspacePackage.js';
 
 /**
  * Registers all MCP tools on the given server instance
@@ -85,4 +92,11 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   registerGetWorkspacePurchasedPackages(server, client);
   registerGetWorkspacePackageItems(server, client);
   registerGetWorkspaceEventBanners(server, client);
+  registerAddWorkspaceProduct(server, client);
+  registerUpdateWorkspaceProduct(server, client);
+  registerDeleteWorkspaceProduct(server, client);
+  registerUpdateWorkspaceBusiness(server, client);
+  registerUpdateWorkspaceRegistration(server, client);
+  registerUpgradeWorkspacePackage(server, client);
+  registerUnsubscribeWorkspacePackage(server, client);
 }
