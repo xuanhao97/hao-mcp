@@ -46,8 +46,14 @@ export function registerSubmitEventForm(server: McpServer, client: ArobidClient)
   server.registerTool(
     'submitEventForm',
     {
-      title: 'Submit Event Form',
-      description: 'Submits the event registration/order form.',
+      title: 'Submit Event Registration or Order',
+      description:
+        'Finalizes and submits an event registration or order form, completing the registration process. ' +
+        'Use this tool after previewEventOrder to actually complete the event registration. This creates the registration record and processes any payments or orders. ' +
+        'This is the final step in the event registration workflow: (1) User selects event and packages, (2) Call previewEventOrder to show pricing, (3) User confirms, (4) Call this tool to submit. ' +
+        'The tool accepts the same parameters as previewEventOrder, including contact information, business details, selected packages, discount codes, and registration preferences. ' +
+        'Supports creating user accounts (isCreateAccount), subscribing to notifications (isSubscribeNotifications), and various registration options. ' +
+        'Required: eventId. Many optional fields available for registration details (name, contact info, business info, packages, couponCode, etc.). See inputSchema for full list.',
       inputSchema: submitFormSchema,
     },
     async (args) => {

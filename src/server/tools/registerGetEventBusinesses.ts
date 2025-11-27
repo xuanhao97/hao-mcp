@@ -11,9 +11,13 @@ export function registerGetEventBusinesses(server: McpServer, client: ArobidClie
   server.registerTool(
     'getEventBusinesses',
     {
-      title: 'Get Event Businesses',
+      title: 'Get All Exhibitors for an Event',
       description:
-        'Retrieves exhibitors for a specific event.',
+        'Retrieves the complete list of exhibitors/businesses participating in a specific event with advanced filtering and pagination options. ' +
+        'Use this tool when you need to get all exhibitors for an event with server-side filtering capabilities, including filtering by newly joined businesses, highlighted businesses, and other criteria. ' +
+        'This is similar to searchBusinessesInEvent but uses a different API endpoint with additional filtering options like isNew (newly joined) and isHighLight (featured/highlighted businesses). ' +
+        'Supports pagination (pageSize, pageIndex, skip), sorting (sortField, asc), filtering (filter expression, isNew, isHighLight), and localization (language, currencyId). ' +
+        'Required: either id (query parameter) or eventId (body parameter) - provide at least one. Optional: pageSize (default 100), pageIndex (default 1), filter, skip, sortField, asc, isNew, isHighLight, language (default "en"), currencyId (default 1), requestId, deviceId.',
       inputSchema: {
         id: z
           .number()

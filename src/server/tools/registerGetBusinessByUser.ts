@@ -11,8 +11,14 @@ export function registerGetBusinessByUser(server: McpServer, client: ArobidClien
   server.registerTool(
     'getBusinessByUser',
     {
-      title: 'Get Business By User',
-      description: 'Retrieves businesses associated with the current user.',
+      title: 'Get User\'s Associated Businesses',
+      description:
+        'Retrieves all businesses that are associated with the currently authenticated user. ' +
+        'Use this tool when you need to find out which businesses a user owns, manages, or is associated with. ' +
+        'This requires the user to be authenticated (logged in) as it uses the current user\'s session to determine which businesses to return. ' +
+        'The response includes a list of businesses linked to the authenticated user account. ' +
+        'Useful for: displaying user\'s business dashboard, managing business profiles, or checking user permissions for specific businesses. ' +
+        'Optional parameters: language (default "en"), currencyId (default 1), requestId, deviceId.',
       inputSchema: {
         language: z.string().optional().describe('Language header (default: en)'),
         currencyId: z

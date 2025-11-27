@@ -46,9 +46,14 @@ export function registerPreviewEventOrder(server: McpServer, client: ArobidClien
   server.registerTool(
     'previewEventOrder',
     {
-      title: 'Preview Event Order',
+      title: 'Preview Event Registration Order and Pricing',
       description:
-        'Calculates order totals before submitting.',
+        'Calculates the total cost and order summary for an event registration before final submission. ' +
+        'Use this tool as part of the event registration workflow to show users the pricing breakdown, discounts, taxes, and total amount before they confirm their registration. ' +
+        'This allows users to review their order details, see applied discounts (couponCode), and understand the final cost before committing. ' +
+        'The workflow is: (1) User fills out registration form, (2) Call this tool to preview pricing, (3) User reviews and confirms, (4) Call submitEventForm to complete registration. ' +
+        'Supports packages (mainPackageIds, extraPackageIds, purchasedPackageIds), discounts (couponCode, partnerCode), and various registration options. ' +
+        'Required: eventId. Many optional fields available for registration details (name, contact info, business info, packages, etc.). See inputSchema for full list.',
       inputSchema: submitFormSchema,
     },
     async (args) => {

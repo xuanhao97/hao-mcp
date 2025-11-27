@@ -19,9 +19,13 @@ export function registerGetEventDetail(
   server.registerTool(
     'getEventDetail',
     {
-      title: 'Get Event Detail',
+      title: 'Get Detailed Event Information',
       description:
-        'Gets detailed information for a specific event/exhibition on Arobid platform. Supports localization options via currencyId and language parameters.',
+        'Retrieves comprehensive details for a specific event or exhibition by its event ID. ' +
+        'Use this tool when you have an event ID (from searchEvents, getAllEvents, or other sources) and need complete information about that event, including description, dates, location, pricing, categories, and other metadata. ' +
+        'The response includes all event details such as name, description, start/end dates, venue information, pricing, categories, status, and more. ' +
+        'Supports localization through currencyId (for pricing display) and language (for translated content). ' +
+        'Required: eventId (the unique identifier of the event). Optional: currencyId (default 1), language (default "en").',
       inputSchema: {
         eventId: z
           .string()

@@ -19,9 +19,14 @@ export function registerSearchEvents(
   server.registerTool(
     'searchEvents',
     {
-      title: 'Search Events',
+      title: 'Search Active Exhibitions and Events',
       description:
-        'Searches for active exhibitions/events on Arobid platform. Supports filtering by search term, pagination, sorting, and localization options.',
+        'Searches for active exhibitions and events on the Arobid platform with automatic pagination. ' +
+        'This tool automatically crawls through all available pages to retrieve complete results, ensuring you get all matching events in a single response. ' +
+        'Use this when you need to find events by name, keyword, or other criteria. The tool uses a large default page size (1000) for efficient data retrieval. ' +
+        'Supports filtering by search term, pagination (automatic), sorting by various fields, and localization (language/currency). ' +
+        'The response includes all events from all pages merged into a single array, along with pagination metadata showing total pages loaded and total events found. ' +
+        'Optional parameters: search (keyword to filter events), pageSize (default 1000), pageIndex (default 1), sortField, asc (sort order), currencyId (default 1), language (default "en").',
       inputSchema: {
         search: z
           .string()

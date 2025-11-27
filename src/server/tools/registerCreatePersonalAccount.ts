@@ -19,9 +19,13 @@ export function registerCreatePersonalAccount(
   server.registerTool(
     'createPersonalAccount',
     {
-      title: 'Create Personal Account',
+      title: 'Register New User Account',
       description:
-        'Creates a new personal user account in Arobid Backend. Requires email, password, firstName, lastName, title, phone, and national.',
+        'Creates a new personal user account in the Arobid platform. This is the first step in the account creation workflow. ' +
+        'After successful registration, an OTP code will be sent to the user\'s email address. ' +
+        'You must then use the verifyUser tool with the OTP code to complete account verification. ' +
+        'If the OTP expires, use resendOtp or userLogin to get a new OTP code. ' +
+        'Required fields: email (valid format), password (6-20 chars with uppercase, lowercase, numbers, special chars), firstName, lastName, title (Mr/Mrs), phone (Vietnamese or international format), and national (2-letter country code like VN, US).',
       inputSchema: {
         email: z.string().email().describe('User email address (must be valid email format)'),
         password: z

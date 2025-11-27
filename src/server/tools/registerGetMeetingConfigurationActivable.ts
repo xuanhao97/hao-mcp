@@ -14,9 +14,13 @@ export function registerGetMeetingConfigurationActivable(
   server.registerTool(
     'getMeetingConfigurationActivable',
     {
-      title: 'Get Meeting Configuration Activable',
+      title: 'Check Available Meeting Features for Event',
       description:
-        'Returns which meeting configurations are available for an event using /tradexpo/api/event/{eventId}/meeting-configuration/activable.',
+        'Retrieves information about which meeting and networking features are available and activable for a specific event. ' +
+        'Use this tool when you need to determine what meeting capabilities an event supports, such as virtual meetings, networking features, or scheduling options. ' +
+        'This is useful for: (1) Displaying available meeting features on event pages, (2) Determining if users can schedule meetings with exhibitors, (3) Building meeting/networking interfaces. ' +
+        'The response indicates which meeting configurations are enabled and available for that event. ' +
+        'Required: eventId. Optional: language (default "en"), currencyId (default 1), requestId, deviceId.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

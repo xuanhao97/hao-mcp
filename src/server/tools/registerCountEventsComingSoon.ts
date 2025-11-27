@@ -11,8 +11,13 @@ export function registerCountEventsComingSoon(server: McpServer, client: ArobidC
   server.registerTool(
     'countEventsComingSoon',
     {
-      title: 'Count Events Coming Soon',
-      description: 'Returns the number of upcoming events from /tradexpo/api/event/count-events-coming-soon.',
+      title: 'Count Upcoming Events',
+      description:
+        'Returns the total count of upcoming events that are scheduled to start in the future. ' +
+        'Use this tool when you need a quick count of upcoming events without retrieving the full event list. ' +
+        'This is useful for displaying statistics, badges, or counts on dashboards or event listing pages. ' +
+        'The response is a simple count number, making it efficient for quick queries. ' +
+        'Optional parameters: language (default "en"), currencyId (default 1), requestId, deviceId.',
       inputSchema: {
         language: z.string().optional().describe('Language header (default: en)'),
         currencyId: z

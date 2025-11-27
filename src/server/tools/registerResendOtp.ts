@@ -16,9 +16,13 @@ export function registerResendOtp(server: McpServer, client: ArobidClient): void
   server.registerTool(
     'resendOtp',
     {
-      title: 'Resend OTP',
+      title: 'Request New OTP Code',
       description:
-        'Resends OTP code to user email in Arobid Backend. Use this when verifyUser fails due to expired or invalid OTP. Requires userEmail.',
+        'Sends a new OTP (One-Time Password) code to the user\'s email address. ' +
+        'Use this tool when: (1) The previous OTP has expired, (2) verifyUser fails with an invalid/expired OTP error, or (3) The user didn\'t receive the original OTP email. ' +
+        'This is the preferred method for getting a new OTP when you don\'t have the user\'s password. If you have the password, you can alternatively use userLogin which also sends a new OTP. ' +
+        'After calling this tool, a new 6-digit OTP will be sent to the user\'s email. Wait a moment for the email to arrive, then use verifyUser with the new OTP code. ' +
+        'Required: userEmail (the email address where the OTP should be sent).',
       inputSchema: {
         userEmail: z.string().email().describe('User email address (must be valid email format)'),
       },

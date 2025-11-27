@@ -11,8 +11,13 @@ export function registerGetCategoriesV2(server: McpServer, client: ArobidClient)
   server.registerTool(
     'getCategoriesV2',
     {
-      title: 'Get Categories V2',
-      description: 'Retrieves categories.',
+      title: 'Get Categories (Enhanced Version)',
+      description:
+        'Retrieves categories using an enhanced API version with additional filtering options including alias codes and category types. ' +
+        'Use this tool when you need category information with more advanced filtering capabilities than the standard getCategories tool. ' +
+        'This version supports filtering by: aliasCode (category alias identifiers), categoryType (type of category), level (hierarchy depth), and id (specific category). ' +
+        'Useful for: (1) Finding categories by their alias codes, (2) Filtering by category type, (3) Getting category details with enhanced metadata. ' +
+        'All parameters are optional. Use aliasCode to find categories by their alias, categoryType to filter by type, level for hierarchy depth, or id for a specific category.',
       inputSchema: {
         id: z.number().int().positive().optional().describe('Specific category ID'),
         level: z.number().int().optional().describe('Category level'),

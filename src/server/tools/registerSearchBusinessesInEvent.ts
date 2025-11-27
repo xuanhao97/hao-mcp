@@ -16,9 +16,14 @@ export function registerSearchBusinessesInEvent(server: McpServer, client: Arobi
   server.registerTool(
     'searchBusinessesInEvent',
     {
-      title: 'Search Businesses in Event',
+      title: 'Find Exhibitors in a Specific Event',
       description:
-        'Searches for businesses within a specific event/exhibition on Arobid platform. Supports filtering by search term, pagination, sorting, and various filter options.',
+        'Searches for businesses, exhibitors, or vendors participating in a specific event or exhibition. ' +
+        'Use this tool when you have an event ID and want to find all exhibitors in that event, or search for specific businesses by name, category, country, or other criteria. ' +
+        'This is ideal for: (1) Getting a list of all exhibitors in an event, (2) Finding specific businesses by name or keyword, (3) Filtering exhibitors by country, category, or other attributes. ' +
+        'The response is formatted for quick AI processing, showing business names and a summary count. ' +
+        'Supports filtering by: search term (business name/keyword), originCountryId (array), nationalCode (array), expoBusinessCategoryId (array), pagination, sorting, and localization. ' +
+        'Required: eventId. Optional: search, pageSize (default 1000), pageIndex (default 1), sortField, asc, originCountryId, nationalCode, expoBusinessCategoryId, currencyId (default 1), language (default "en").',
       inputSchema: {
         eventId: z.string().min(1).describe('Event ID to search businesses in (required)'),
         search: z.string().optional().describe('Search term to filter businesses'),

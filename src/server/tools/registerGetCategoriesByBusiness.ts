@@ -11,9 +11,13 @@ export function registerGetCategoriesByBusiness(server: McpServer, client: Arobi
   server.registerTool(
     'getCategoriesByBusiness',
     {
-      title: 'Get Categories By Business',
+      title: 'Get Categories for a Business in Event',
       description:
-        'Fetches categories tied to a business within an event.',
+        'Retrieves all categories that a specific business/exhibitor is associated with within a particular event. ' +
+        'Use this tool when you need to know which product or business categories a specific exhibitor belongs to in an event context. ' +
+        'This is useful for: (1) Displaying category tags on a business profile page, (2) Filtering businesses by their categories, (3) Understanding how businesses are categorized in events. ' +
+        'The response includes all categories that the business is classified under in that specific event. ' +
+        'Required: eventId and businessId. Optional: language (default "en"), currencyId (default 1), requestId, deviceId.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID'),
         businessId: z.number().int().positive().describe('Business ID'),
