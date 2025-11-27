@@ -13,11 +13,7 @@ export function registerGetCategories(server: McpServer, client: ArobidClient): 
     {
       title: 'Get Product and Business Categories',
       description:
-        'Retrieves the category hierarchy used for organizing products and businesses in the Arobid platform. ' +
-        'Use this tool when you need to: (1) Display category filters or navigation menus, (2) Get category information for filtering products or businesses, (3) Understand the category structure and hierarchy. ' +
-        'Categories are organized in a hierarchical structure with levels and parent-child relationships. ' +
-        'Supports filtering by: search keyword, level (category depth in hierarchy), parentId (to get subcategories), id (specific category), and localization (language, currencyId). ' +
-        'All parameters are optional. Use level to get categories at a specific depth, parentId to get subcategories of a parent, or id to get details of a specific category.',
+        'Gets category hierarchy. Optional: search, level, parentId, id, language, currencyId.',
       inputSchema: {
         search: z.string().optional().describe('Search keyword'),
         level: z.number().int().optional().describe('Category level'),

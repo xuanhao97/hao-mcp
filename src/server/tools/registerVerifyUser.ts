@@ -18,11 +18,7 @@ export function registerVerifyUser(server: McpServer, client: ArobidClient): voi
     {
       title: 'Verify Account with OTP Code',
       description:
-        'Completes user account verification by validating the OTP (One-Time Password) code sent to the user\'s email. ' +
-        'This tool is used in two scenarios: (1) After createPersonalAccount - to verify a newly registered account, or (2) After userLogin/resendOtp - to complete authentication when OTP is required. ' +
-        'The OTP code is a 6-digit number that was sent to the user\'s email address. ' +
-        'If verification fails due to expired or invalid OTP, use resendOtp to request a new code, or use userLogin if you have the user\'s password. ' +
-        'Required: userEmail (the email address where OTP was sent) and otp (exactly 6 digits).',
+        'Verifies account with 6-digit OTP from email. Use after createPersonalAccount or userLogin. Required: userEmail, otp.',
       inputSchema: {
         userEmail: z.string().email().describe('User email address (must be valid email format)'),
         otp: z

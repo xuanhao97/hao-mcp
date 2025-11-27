@@ -39,12 +39,7 @@ export function registerGetAllEvents(server: McpServer, client: ArobidClient): v
     {
       title: 'Query Events with Advanced Filters',
       description:
-        'Retrieves events using powerful backend filtering capabilities including status codes, categories, date ranges, countries, event types, and more. ' +
-        'Use this tool when you need to filter events by specific criteria like status (active, upcoming, past), date ranges, origin countries, event types, or categories. ' +
-        'This is more powerful than searchEvents for complex queries with multiple filter conditions. ' +
-        'Supports filtering by: status (array of status codes - see status codes description), dateFrom/dateTo (ISO date strings), originCountryId, nationalCode, eventType, type (classification), categoryId, and free-text search. ' +
-        'Also supports pagination (pageSize, pageIndex, skip), sorting (sortField, asc), and localization (language, currencyId). ' +
-        'All parameters are optional. Use status filter to get events by their lifecycle stage (e.g., active, coming soon, ended).',
+        'Queries events with advanced filters: status, dateFrom/dateTo, originCountryId, nationalCode, eventType, type, categoryId, search. Supports pagination, sorting. All params optional.',
       inputSchema: {
         ...filtersSchema,
         language: z.string().optional().describe('Language header (default: en)'),

@@ -16,11 +16,7 @@ export function registerGetEventBusinessProductSummary(
     {
       title: 'Get Event Statistics Summary',
       description:
-        'Retrieves aggregate statistics and counts for businesses and products within a specific event. ' +
-        'Use this tool when you need quick statistics about an event, such as total number of exhibitors, total number of products, or other aggregate metrics. ' +
-        'This is useful for: (1) Displaying event statistics on event detail pages, (2) Showing summary information before loading full lists, (3) Building dashboards with event metrics. ' +
-        'The response includes counts and summary statistics that give you an overview of the event\'s scale and content. ' +
-        'Required: eventId. Optional: language (default "en"), currencyId (default 1), requestId, deviceId.',
+        'Gets event statistics: exhibitor count, product count. Required: eventId. Optional: language, currencyId, requestId, deviceId.',
       inputSchema: {
         eventId: z.number().int().positive().describe('ID of the event'),
         language: z.string().optional().describe('Language header (default: en)'),

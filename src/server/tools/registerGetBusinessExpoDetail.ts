@@ -13,11 +13,7 @@ export function registerGetBusinessExpoDetail(server: McpServer, client: ArobidC
     {
       title: 'Get Exhibitor Profile in Event',
       description:
-        'Retrieves the complete detailed profile of a business/exhibitor as they appear in a specific event or exhibition. ' +
-        'Use this tool when you have both a business ID and event ID and need comprehensive information about how that business is presented in that event, including their showcase, products, statistics, and event-specific details. ' +
-        'The response includes: business profile information, showcases, statistics, contact details, categories, and other event-specific metadata. ' +
-        'This is different from general business information - it shows how the business is represented within the context of a specific event. ' +
-        'Required: businessId (the business/exhibitor ID) and eventId (the event ID). Optional: originCountryId (array), categoriesId (array), language (default "en"), currencyId (default 1), requestId, deviceId.',
+        'Gets exhibitor profile in event context. Returns showcase, products, stats, contact. Required: businessId, eventId. Optional: originCountryId, categoriesId, language, currencyId, requestId, deviceId.',
       inputSchema: {
         businessId: z.number().int().positive().describe('Business ID path parameter'),
         eventId: z.number().int().positive().describe('EventId query parameter'),

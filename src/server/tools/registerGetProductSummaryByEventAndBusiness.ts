@@ -16,11 +16,7 @@ export function registerGetProductSummaryByEventAndBusiness(
     {
       title: 'Get Product Statistics for Business in Event',
       description:
-        'Retrieves product statistics and summary information for a specific business/exhibitor within a particular event. ' +
-        'Use this tool when you need to know how many products a business is showcasing in an event, or get summary statistics about their product catalog. ' +
-        'This is useful for: (1) Displaying product count on business profile pages, (2) Showing statistics before loading the full product list, (3) Building business comparison features. ' +
-        'The response includes product counts and statistics specific to how that business is represented in that event. ' +
-        'Required: eventId and businessId. Optional: language (default "en"), currencyId (default 1), requestId, deviceId.',
+        'Gets product statistics for a business in event. Required: eventId, businessId. Optional: language, currencyId, requestId, deviceId.',
       inputSchema: {
         eventId: z.number().int().positive().describe('ID of the event (path parameter)'),
         businessId: z.number().int().positive().describe('Business ID (path parameter)'),

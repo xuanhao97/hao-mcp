@@ -13,11 +13,7 @@ export function registerGetEventBanners(server: McpServer, client: ArobidClient)
     {
       title: 'Get Hero Banners and Featured Media',
       description:
-        'Retrieves promotional banners, hero images, and spotlight media content for tradexpo events. ' +
-        'Use this tool when you need to display featured event content, promotional banners, or spotlight media on a homepage or event listing page. ' +
-        'The response includes hero banners and spotlight media that are typically used for marketing and promotional purposes. ' +
-        'This is useful for building event discovery interfaces or displaying featured events prominently. ' +
-        'Optional parameters: language (default "en"), currencyId (default 1), requestId (for traceability), deviceId.',
+        'Gets promotional banners and hero images for events. Optional: language ("en"), currencyId (1), requestId, deviceId.',
       inputSchema: {
         language: z.string().optional().describe('Language header (default: en)'),
         currencyId: z

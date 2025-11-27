@@ -13,10 +13,7 @@ export function registerGetCategoriesByEvent(server: McpServer, client: ArobidCl
     {
       title: 'Get Categories Available in an Event',
       description:
-        'Retrieves all categories that are used or available within a specific event or exhibition. ' +
-        'Use this tool when you need to: (1) Display category filters for products or businesses in an event, (2) Understand what categories are relevant to a specific event, (3) Build category-based navigation for an event. ' +
-        'This returns the categories that are actually used in the event context, which may differ from the global category list. ' +
-        'Required: eventId. Optional: language (default "en"), currencyId (default 1), requestId, deviceId.',
+        'Gets categories available in event. Required: eventId. Optional: language, currencyId, requestId, deviceId.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event ID (path parameter)'),
         language: z.string().optional().describe('Language header (default: en)'),

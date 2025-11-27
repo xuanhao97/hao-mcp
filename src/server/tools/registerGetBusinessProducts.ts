@@ -13,11 +13,7 @@ export function registerGetBusinessProducts(server: McpServer, client: ArobidCli
     {
       title: 'Get Products for a Business in Event',
       description:
-        'Retrieves the complete product catalog of a specific business/exhibitor as they are displayed in a particular event. ' +
-        'Use this tool when you have both a business ID and event ID and need to see all products that business is showcasing in that event. ' +
-        'This is useful for: (1) Displaying a business\'s product catalog on their event profile page, (2) Browsing products from a specific exhibitor, (3) Building product discovery features within an event context. ' +
-        'Supports pagination (pageSize, pageIndex, skip), sorting (sortField, asc), filtering (filter expression), and localization (language, currencyId). ' +
-        'Required: eventId and businessId. Optional: pageSize (default 100), pageIndex (default 1), filter, skip, sortField, asc, language (default "en"), currencyId (default 1), requestId, deviceId.',
+        'Gets products for a business in event. Required: eventId, businessId. Optional: pageSize (100), pageIndex (1), filter, skip, sortField, asc, language, currencyId, requestId, deviceId.',
       inputSchema: {
         eventId: z.number().int().positive().describe('Event (id path parameter)'),
         businessId: z.number().int().positive().describe('BusinessId path parameter'),

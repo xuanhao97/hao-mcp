@@ -18,10 +18,7 @@ export function registerUserLogin(server: McpServer, client: ArobidClient): void
     {
       title: 'Authenticate User and Request OTP',
       description:
-        'Authenticates a user with their email and password credentials. After successful login, a new OTP code is automatically sent to the user\'s email. ' +
-        'Use this tool when: (1) User needs to log in to their account, (2) Previous OTP has expired and you need a fresh one for verification, or (3) As an alternative to resendOtp when you have the user\'s password. ' +
-        'Important: If the response contains errorCode 5, this indicates the OTP was sent successfully - proceed to verifyUser with the OTP code from the email. ' +
-        'This tool requires the user\'s email and password. After calling this tool, check the user\'s email for the OTP code and use verifyUser to complete authentication.',
+        'Login with email/password. Sends OTP to email. If errorCode 5, OTP sent successfully - use verifyUser. Required: email, password.',
       inputSchema: {
         email: z.string().email().describe('User email address (must be valid email format)'),
         password: z

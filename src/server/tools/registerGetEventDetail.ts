@@ -21,11 +21,7 @@ export function registerGetEventDetail(
     {
       title: 'Get Detailed Event Information',
       description:
-        'Retrieves comprehensive details for a specific event or exhibition by its event ID. ' +
-        'Use this tool when you have an event ID (from searchEvents, getAllEvents, or other sources) and need complete information about that event, including description, dates, location, pricing, categories, and other metadata. ' +
-        'The response includes all event details such as name, description, start/end dates, venue information, pricing, categories, status, and more. ' +
-        'Supports localization through currencyId (for pricing display) and language (for translated content). ' +
-        'Required: eventId (the unique identifier of the event). Optional: currencyId (default 1), language (default "en").',
+        'Gets event details by ID. Returns name, dates, location, pricing, categories, status. Required: eventId. Optional: currencyId (1), language ("en").',
       inputSchema: {
         eventId: z
           .string()

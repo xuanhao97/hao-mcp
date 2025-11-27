@@ -13,11 +13,7 @@ export function registerGetEventProducts(server: McpServer, client: ArobidClient
     {
       title: 'Get All Products in an Event',
       description:
-        'Retrieves all products from all exhibitors participating in a specific event, with advanced filtering capabilities. ' +
-        'Use this tool when you need to browse or search through all products available in an event, regardless of which business is offering them. ' +
-        'This is ideal for: (1) Building a product catalog/browse page for an event, (2) Searching for specific products across all exhibitors, (3) Filtering products by country, category, or other attributes. ' +
-        'Supports filtering by: search keyword, originCountryId (array), nationalCode (array), expoBusinessCategoryId (array), isNew (newly added), isHighLight (featured), isActived (active only), pagination, sorting, and localization. ' +
-        'Required: either id (query parameter) or eventId (body parameter) - provide at least one. Optional: pageSize (default 100), pageIndex (default 1), filter, skip, sortField, asc, search, originCountryId, nationalCode, expoBusinessCategoryId, isNew, isHighLight, isActived, language (default "en"), currencyId (default 1), requestId, deviceId.',
+        'Gets all products in an event. Required: id or eventId. Optional: pageSize (100), pageIndex (1), filter, skip, sortField, asc, search, originCountryId, nationalCode, expoBusinessCategoryId, isNew, isHighLight, isActived, language, currencyId, requestId, deviceId.',
       inputSchema: {
         id: z
           .number()

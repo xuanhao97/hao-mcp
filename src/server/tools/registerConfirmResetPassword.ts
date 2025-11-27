@@ -18,12 +18,7 @@ export function registerConfirmResetPassword(server: McpServer, client: ArobidCl
     {
       title: 'Complete Password Reset with OTP',
       description:
-        'Finalizes the password reset or password change process by validating the OTP code and setting the new password. ' +
-        'This tool must be used after checkResetPassword has been called and the OTP code has been sent to the user\'s email. ' +
-        'The workflow is: (1) Call checkResetPassword with user email, (2) User receives OTP in email, (3) Call this tool with email, new password, and OTP to complete. ' +
-        'The new password must be 6-20 characters and include: at least one lowercase letter, one uppercase letter, one number, and one special character (@$!%*?&). ' +
-        'The OTP must be exactly 6 digits as received in the email. ' +
-        'Required: email (user\'s email address), password (new password meeting complexity requirements), and otp (6-digit code from email).',
+        'Completes password reset with OTP. Use after checkResetPassword. Password: 6-20 chars (upper, lower, number, special). Required: email, password, otp (6 digits).',
       inputSchema: {
         email: z.string().email().describe('User email address (must be valid email format)'),
         password: z
