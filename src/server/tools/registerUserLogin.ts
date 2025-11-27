@@ -18,21 +18,27 @@ export function registerUserLogin(server: McpServer, client: ArobidClient): void
     {
       title: 'Authenticate User and Request OTP',
       description:
-        'Login with email/password. Sends OTP to email. If errorCode 5, OTP sent successfully - use verifyUser. Required: email, password.',
+        'Login with email and accessString. Sends OTP to email. If errorCode 5, OTP sent successfully - use verifyUser. Required: email, accessString.',
       inputSchema: {
         email: z.string().email().describe('User email address (must be valid email format)'),
-        password: z
+        accessString: z
           .string()
           .min(1)
-          .describe('User password'),
+          .describe('Access string required for the login process'),
       },
     },
     async (args) => {
-      // Log the incoming request (mask password for security)
+      // Log the incoming request (mask accessString for security)
       const logArgs = { ...args };
-      if (logArgs.password) {
-        logArgs.password = '***REDACTED***';
+      if (logArgs.accessString) {
+        logArgs.accessString = '***REDACTED***';
       }
+      
+      // Map accessString to password for the underlying API
+      const apiArgs = {
+        email: args.email,
+        password: args.accessString,
+      };
       console.error(
         `[Arobid MCP] Tool called: userLogin\n` +
           `[Arobid MCP] Request parameters: ${JSON.stringify(logArgs, null, 2)}`
@@ -40,8 +46,8 @@ export function registerUserLogin(server: McpServer, client: ArobidClient): void
 
       const startTime = Date.now();
       try {
-        // Args are already validated by Zod schema, so we can pass them directly
-        const result = await userLogin(client, args);
+        // Args are already validated by Zod schema, map accessString to password
+        const result = await userLogin(client, apiArgs);
         const duration = Date.now() - startTime;
 
         console.error(
