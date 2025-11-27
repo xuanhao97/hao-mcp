@@ -25,9 +25,9 @@ export function registerConfirmResetPassword(server: McpServer, client: ArobidCl
           .string()
           .min(6)
           .max(20)
-          .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/, {
+          .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~]{6,20}$/, {
             message:
-              'Password must be 6-20 characters and include lowercase, uppercase, numbers, and special characters',
+              'Password must be 6-20 characters and include lowercase, uppercase, numbers, and special characters (!@#$%^&*()_+-=[]{}|;:\'",.<>?/~)',
           })
           .describe(
             'New password (6-20 characters, must include lowercase, uppercase, numbers, and special characters)'

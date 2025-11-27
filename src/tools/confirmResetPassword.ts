@@ -34,11 +34,11 @@ function validatePassword(password: string): void {
   const hasLowercase = /[a-z]/.test(password);
   const hasUppercase = /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
-  const hasSpecialChar = /[@$!%*?&]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/~]/.test(password);
 
   if (!hasLowercase || !hasUppercase || !hasNumber || !hasSpecialChar) {
     throw new Error(
-      'Password must include at least one lowercase letter, one uppercase letter, one number, and one special character (@$!%*?&)'
+      'Password must include at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*()_+-=[]{}|;:\'",.<>?/~)'
     );
   }
 }
