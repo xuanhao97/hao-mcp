@@ -20,6 +20,7 @@ import { registerSearchBusinessesInEvent } from './tools/registerSearchBusinesse
 import { registerSearchBusinessesInMultipleEvents } from './tools/registerSearchBusinessesInMultipleEvents.js';
 import { registerGetEventDetail } from './tools/registerGetEventDetail.js';
 import { registerGetEventBanners } from './tools/registerGetEventBanners.js';
+import { registerGetCategories } from './tools/registerGetCategories.js';
 import { registerGetAllEvents } from './tools/registerGetAllEvents.js';
 import { registerGetEventBusinesses } from './tools/registerGetEventBusinesses.js';
 import { registerGetEventProducts } from './tools/registerGetEventProducts.js';
@@ -29,6 +30,8 @@ import { registerGetEventBusinessProductSummary } from './tools/registerGetEvent
 import { registerGetProductSummaryByEventAndBusiness } from './tools/registerGetProductSummaryByEventAndBusiness.js';
 import { registerCountEventsComingSoon } from './tools/registerCountEventsComingSoon.js';
 import { registerGetMeetingConfigurationActivable } from './tools/registerGetMeetingConfigurationActivable.js';
+import { registerPreviewEventOrder } from './tools/registerPreviewEventOrder.js';
+import { registerSubmitEventForm } from './tools/registerSubmitEventForm.js';
 import { registerGetWorkspaceBusinessDetail } from './tools/registerGetWorkspaceBusinessDetail.js';
 import { registerGetWorkspaceEventDetail } from './tools/registerGetWorkspaceEventDetail.js';
 import { registerGetWorkspaceRegistrationDetail } from './tools/registerGetWorkspaceRegistrationDetail.js';
@@ -50,6 +53,10 @@ import { registerUpdateWorkspaceBusiness } from './tools/registerUpdateWorkspace
 import { registerUpdateWorkspaceRegistration } from './tools/registerUpdateWorkspaceRegistration.js';
 import { registerUpgradeWorkspacePackage } from './tools/registerUpgradeWorkspacePackage.js';
 import { registerUnsubscribeWorkspacePackage } from './tools/registerUnsubscribeWorkspacePackage.js';
+import { registerGetCategoriesByBusiness } from './tools/registerGetCategoriesByBusiness.js';
+import { registerGetCategoriesByEvent } from './tools/registerGetCategoriesByEvent.js';
+import { registerGetCategoriesV2 } from './tools/registerGetCategoriesV2.js';
+import { registerGetBusinessByUser } from './tools/registerGetBusinessByUser.js';
 
 /**
  * Registers all MCP tools on the given server instance
@@ -69,6 +76,11 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   registerSearchBusinessesInMultipleEvents(server, client);
   registerGetEventDetail(server, client);
   registerGetEventBanners(server, client);
+  registerGetCategories(server, client);
+  registerGetCategoriesByBusiness(server, client);
+  registerGetCategoriesByEvent(server, client);
+  registerGetCategoriesV2(server, client);
+  registerGetBusinessByUser(server, client);
   registerGetAllEvents(server, client);
   registerGetEventBusinesses(server, client);
   registerGetEventProducts(server, client);
@@ -78,6 +90,8 @@ export function registerTools(server: McpServer, client: ArobidClient): void {
   registerGetProductSummaryByEventAndBusiness(server, client);
   registerCountEventsComingSoon(server, client);
   registerGetMeetingConfigurationActivable(server, client);
+  registerPreviewEventOrder(server, client);
+  registerSubmitEventForm(server, client);
   registerGetWorkspaceBusinessDetail(server, client);
   registerGetWorkspaceEventDetail(server, client);
   registerGetWorkspaceRegistrationDetail(server, client);
