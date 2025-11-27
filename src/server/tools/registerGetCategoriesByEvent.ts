@@ -9,7 +9,7 @@ import { getCategoriesByEvent } from '../../tools/getCategoriesByEvent.js';
 
 export function registerGetCategoriesByEvent(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getCategoriesByEvent',
+    'get-categories-available-in-event',
     {
       title: 'Get Categories Available in an Event',
       description:

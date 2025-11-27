@@ -14,7 +14,7 @@ import { confirmResetPassword } from '../../tools/confirmResetPassword.js';
  */
 export function registerConfirmResetPassword(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'confirmResetPassword',
+    'complete-password-reset-with-otp',
     {
       title: 'Complete Password Reset with OTP',
       description:

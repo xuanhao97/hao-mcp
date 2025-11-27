@@ -44,7 +44,7 @@ const submitFormSchema = {
 
 export function registerPreviewEventOrder(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'previewEventOrder',
+    'preview-event-registration-order-and-pricing',
     {
       title: 'Preview Event Registration Order and Pricing',
       description:

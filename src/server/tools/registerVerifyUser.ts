@@ -14,7 +14,7 @@ import { verifyUser } from '../../tools/verifyUser.js';
  */
 export function registerVerifyUser(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'verifyUser',
+    'verify-account-with-otp-code',
     {
       title: 'Verify Account with OTP Code',
       description:

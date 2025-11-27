@@ -17,7 +17,7 @@ export function registerCreatePersonalAccount(
   client: ArobidClient
 ): void {
   server.registerTool(
-    'createPersonalAccount',
+    'register-new-user-account',
     {
       title: 'Register New User Account',
       description:

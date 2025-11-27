@@ -14,7 +14,7 @@ import { userLogin } from '../../tools/userLogin.js';
  */
 export function registerUserLogin(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'userLogin',
+    'authenticate-user-and-request-otp',
     {
       title: 'Authenticate User and Request OTP',
       description:

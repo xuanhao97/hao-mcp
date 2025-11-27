@@ -14,7 +14,7 @@ import { resendOtp } from '../../tools/resendOtp.js';
  */
 export function registerResendOtp(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'resendOtp',
+    'request-new-otp-code',
     {
       title: 'Request New OTP Code',
       description:

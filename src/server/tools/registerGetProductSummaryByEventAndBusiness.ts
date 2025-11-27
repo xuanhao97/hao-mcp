@@ -12,7 +12,7 @@ export function registerGetProductSummaryByEventAndBusiness(
   client: ArobidClient
 ): void {
   server.registerTool(
-    'getProductSummaryByEventAndBusiness',
+    'get-product-statistics-for-business-in-event',
     {
       title: 'Get Product Statistics for Business in Event',
       description:

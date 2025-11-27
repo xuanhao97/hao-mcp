@@ -14,7 +14,7 @@ import { searchBusinessesInEvent } from '../../tools/searchBusinessesInEvent.js'
  */
 export function registerSearchBusinessesInEvent(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'searchBusinessesInEvent',
+    'find-exhibitors-in-specific-event',
     {
       title: 'Find Exhibitors in a Specific Event',
       description:

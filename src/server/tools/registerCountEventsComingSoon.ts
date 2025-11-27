@@ -9,7 +9,7 @@ import { countEventsComingSoon } from '../../tools/countEventsComingSoon.js';
 
 export function registerCountEventsComingSoon(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'countEventsComingSoon',
+    'count-upcoming-events',
     {
       title: 'Count Upcoming Events',
       description:

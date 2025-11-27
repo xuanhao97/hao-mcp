@@ -9,7 +9,7 @@ import { getEventBanners } from '../../tools/getEventBanners.js';
 
 export function registerGetEventBanners(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getEventBanners',
+    'get-hero-banners-and-featured-media',
     {
       title: 'Get Hero Banners and Featured Media',
       description:

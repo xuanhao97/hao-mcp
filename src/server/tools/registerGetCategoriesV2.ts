@@ -9,7 +9,7 @@ import { getCategoriesV2 } from '../../tools/getCategoriesV2.js';
 
 export function registerGetCategoriesV2(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getCategoriesV2',
+    'get-categories-enhanced-version',
     {
       title: 'Get Categories (Enhanced Version)',
       description:

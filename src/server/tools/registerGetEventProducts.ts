@@ -9,7 +9,7 @@ import { getEventProducts } from '../../tools/getEventProducts.js';
 
 export function registerGetEventProducts(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getEventProducts',
+    'get-all-products-in-event',
     {
       title: 'Get All Products in an Event',
       description:

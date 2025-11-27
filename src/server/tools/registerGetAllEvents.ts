@@ -35,7 +35,7 @@ const filtersSchema = {
 
 export function registerGetAllEvents(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getAllEvents',
+    'query-events-with-advanced-filters',
     {
       title: 'Query Events with Advanced Filters',
       description:

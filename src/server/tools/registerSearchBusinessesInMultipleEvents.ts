@@ -17,14 +17,15 @@ export function registerSearchBusinessesInMultipleEvents(
   client: ArobidClient
 ): void {
   server.registerTool(
-    'searchBusinessesInMultipleEvents',
+    'search-exhibitors-across-multiple-events',
     {
       title: 'Search Exhibitors Across Multiple Events',
       description:
         'Searches for businesses or exhibitors across multiple events simultaneously, processing events in batches for efficiency. ' +
         'Use this tool when you need to check if a specific business appears in any of several events, or when you want to compare exhibitor lists across multiple events. ' +
-        'This is more efficient than calling searchBusinessesInEvent multiple times. The tool processes events in batches of 10 concurrently. ' +
-        'The response includes: businesses (flattened list of all matches), resultsByEvent (object keyed by event IDs for per-event inspection), and execution metadata (events processed, batches processed, summary). ' +
+        'This is more efficient than calling searchBusinessesInEvent multiple times. The tool processes events in batches of 20 concurrently. ' +
+        'The response includes: resultsByEvent (object keyed by event IDs containing successful search results), eventsProcessed (count of successful searches), totalEvents (total number of events), failedEvents (array of event IDs that failed), and errors (array of detailed error information including eventId, error message, HTTP status code, and error code if available). ' +
+        'If some events fail, the tool will continue processing other events and return partial results. Check the errors array for detailed information about which events failed and why. ' +
         'Use this to quickly determine which events a vendor participates in, or to aggregate exhibitor data across multiple events. ' +
         'Required: eventIds (array of at least one event ID). Optional: search (keyword to filter businesses), pageSize (default 1000), pageIndex (default 1), sortField, asc, originCountryId, nationalCode, expoBusinessCategoryId, currencyId (default 1), language (default "en").',
       inputSchema: {

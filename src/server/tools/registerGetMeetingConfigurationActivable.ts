@@ -12,7 +12,7 @@ export function registerGetMeetingConfigurationActivable(
   client: ArobidClient
 ): void {
   server.registerTool(
-    'getMeetingConfigurationActivable',
+    'check-available-meeting-features-for-event',
     {
       title: 'Check Available Meeting Features for Event',
       description:

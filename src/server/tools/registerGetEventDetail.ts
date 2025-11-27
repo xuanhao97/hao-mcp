@@ -17,7 +17,7 @@ export function registerGetEventDetail(
   client: ArobidClient
 ): void {
   server.registerTool(
-    'getEventDetail',
+    'get-detailed-event-information',
     {
       title: 'Get Detailed Event Information',
       description:

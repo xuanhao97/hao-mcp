@@ -9,7 +9,7 @@ import { getEventBusinesses } from '../../tools/getEventBusinesses.js';
 
 export function registerGetEventBusinesses(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getEventBusinesses',
+    'get-all-exhibitors-for-event',
     {
       title: 'Get All Exhibitors for an Event',
       description:

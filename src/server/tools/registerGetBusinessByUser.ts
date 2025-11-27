@@ -9,7 +9,7 @@ import { getBusinessByUser } from '../../tools/getBusinessByUser.js';
 
 export function registerGetBusinessByUser(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getBusinessByUser',
+    'get-users-associated-businesses',
     {
       title: 'Get User\'s Associated Businesses',
       description:

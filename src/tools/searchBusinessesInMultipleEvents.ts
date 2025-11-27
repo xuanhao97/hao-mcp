@@ -28,6 +28,16 @@ export interface SearchBusinessesInMultipleEventsInput {
 }
 
 /**
+ * Error information for a failed event search
+ */
+export interface EventSearchError {
+  eventId: string;
+  error: string;
+  statusCode?: number;
+  code?: string;
+}
+
+/**
  * Response from searching businesses in multiple events
  * Returns raw data for AI to process and make decisions
  */
@@ -36,6 +46,7 @@ export interface SearchBusinessesInMultipleEventsResponse {
   eventsProcessed: number;
   totalEvents: number;
   failedEvents: string[];
+  errors?: EventSearchError[];
   [key: string]: unknown;
 }
 
@@ -197,6 +208,7 @@ export async function searchBusinessesInMultipleEvents(
 
     const resultsByEvent: Record<string, SearchBusinessesInEventResponse> = {};
     const failedEvents: string[] = [];
+    const errors: EventSearchError[] = [];
     let eventsProcessed = 0;
 
     // Process events in batches
@@ -222,10 +234,41 @@ export async function searchBusinessesInMultipleEvents(
           };
 
           const response = await searchBusinessesInEvent(client, eventInput);
-          return { eventId, response, success: true };
+          return { eventId, response, success: true, error: null };
         } catch (error) {
-          console.error(`[searchBusinessesInMultipleEvents] Failed to search event ${eventId}:`, error);
-          return { eventId, response: null, success: false };
+          // Extract detailed error information
+          let errorMessage = 'Unknown error';
+          let statusCode: number | undefined;
+          let errorCode: string | undefined;
+
+          if (error && typeof error === 'object') {
+            if ('statusCode' in error) {
+              statusCode = error.statusCode as number;
+            }
+            if ('code' in error) {
+              errorCode = error.code as string;
+            }
+            if ('message' in error) {
+              errorMessage = String(error.message);
+            }
+          } else if (error instanceof Error) {
+            errorMessage = error.message;
+          } else {
+            errorMessage = String(error);
+          }
+
+          const errorInfo: EventSearchError = {
+            eventId,
+            error: errorMessage,
+            statusCode,
+            code: errorCode,
+          };
+
+          console.error(
+            `[searchBusinessesInMultipleEvents] Failed to search event ${eventId}: ${errorMessage}${statusCode ? ` (HTTP ${statusCode})` : ''}${errorCode ? ` [${errorCode}]` : ''}`
+          );
+
+          return { eventId, response: null, success: false, error: errorInfo };
         }
       });
 
@@ -233,7 +276,10 @@ export async function searchBusinessesInMultipleEvents(
       const batchResults = await Promise.allSettled(batchPromises);
 
       // Collect results
-      for (const settledResult of batchResults) {
+      for (let i = 0; i < batchResults.length; i++) {
+        const settledResult = batchResults[i];
+        const eventId = batch[i];
+        
         if (settledResult.status === 'fulfilled') {
           const result = settledResult.value;
           if (result.success && result.response) {
@@ -241,11 +287,19 @@ export async function searchBusinessesInMultipleEvents(
             eventsProcessed++;
           } else {
             failedEvents.push(result.eventId);
+            if (result.error) {
+              errors.push(result.error);
+            }
           }
         } else {
           // Handle promise rejection
-          const eventId = batch[batchResults.indexOf(settledResult)] || 'unknown';
           failedEvents.push(eventId);
+          const errorMessage = settledResult.reason?.message || 
+                              (settledResult.reason instanceof Error ? settledResult.reason.message : 'Promise rejected');
+          errors.push({
+            eventId,
+            error: errorMessage,
+          });
         }
       }
     }
@@ -256,6 +310,7 @@ export async function searchBusinessesInMultipleEvents(
       eventsProcessed,
       totalEvents,
       failedEvents,
+      errors: errors.length > 0 ? errors : undefined,
     };
 
     return response;

@@ -209,11 +209,16 @@ export async function searchBusinessesInEvent(
   try {
     const endpoint = '/tradexpo/api/event/get-business-by-event-id-mul-for-view-all';
 
-    // Build request payload
+    // Build request payload matching the curl command structure
+    // Always include filter arrays (even if empty) to match API expectations
     const payload: Record<string, unknown> = {
       eventId: validatedInput.eventId,
+      originCountryId: validatedInput.originCountryId || [],
+      nationalCode: validatedInput.nationalCode || [],
+      expoBusinessCategoryId: validatedInput.expoBusinessCategoryId || [],
     };
 
+    // Add optional fields
     if (validatedInput.search) {
       payload.search = validatedInput.search;
     }
@@ -226,45 +231,32 @@ export async function searchBusinessesInEvent(
       payload.pageIndex = validatedInput.pageIndex;
     }
 
+    // Handle sortField - API accepts both camelCase and PascalCase
     if (validatedInput.sortField) {
       payload.sortField = validatedInput.sortField;
-      payload.SortField = validatedInput.sortField; // API seems to accept both
+      payload.SortField = validatedInput.sortField;
     }
 
+    // Handle asc - API accepts both camelCase and PascalCase
     if (validatedInput.asc !== undefined) {
       payload.asc = validatedInput.asc;
-      payload.Asc = validatedInput.asc; // API seems to accept both
+      payload.Asc = validatedInput.asc;
     }
 
-    if (validatedInput.originCountryId !== undefined) {
-      payload.originCountryId = validatedInput.originCountryId;
-    }
-
-    if (validatedInput.nationalCode !== undefined) {
-      payload.nationalCode = validatedInput.nationalCode;
-    }
-
-    if (validatedInput.expoBusinessCategoryId !== undefined) {
-      payload.expoBusinessCategoryId = validatedInput.expoBusinessCategoryId;
-    }
-
-    // Build custom headers for tradexpo API
+    // Build custom headers matching the curl command
     const customHeaders: Record<string, string> = {
       accept: 'application/json',
+      'accept-language': validatedInput.language === 'vi' 
+        ? 'vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7'
+        : 'en-US,en;q=0.9,vi;q=0.8',
       'content-type': 'application/json',
     };
 
-    if (validatedInput.currencyId !== undefined) {
-      customHeaders['currencyid'] = validatedInput.currencyId.toString();
-    } else {
-      customHeaders['currencyid'] = '1';
-    }
+    // Currency ID header (default: 1)
+    customHeaders['currencyid'] = validatedInput.currencyId?.toString() || '1';
 
-    if (validatedInput.language) {
-      customHeaders['language'] = validatedInput.language;
-    } else {
-      customHeaders['language'] = 'en';
-    }
+    // Language header (default: en)
+    customHeaders['language'] = validatedInput.language || 'en';
 
     // Minimal logging for performance
 
@@ -297,14 +289,37 @@ export async function searchBusinessesInEvent(
     // Handle Arobid-specific errors
     if (error && typeof error === 'object' && 'statusCode' in error) {
       const arobidError = error as ArobidError;
-      throw new Error(
-        `Failed to search businesses: ${arobidError.message}${arobidError.code ? ` (${arobidError.code})` : ''}`
-      );
+      const statusCode = arobidError.statusCode;
+      const errorMessage = arobidError.message || 'Unknown error';
+      const errorCode = arobidError.code;
+      
+      // Create detailed error message
+      let detailedMessage = `Failed to search businesses in event "${validatedInput.eventId}": ${errorMessage}`;
+      
+      if (statusCode) {
+        detailedMessage += ` (HTTP ${statusCode})`;
+      }
+      
+      if (errorCode) {
+        detailedMessage += ` [${errorCode}]`;
+      }
+      
+      // Preserve error information for better debugging
+      const enhancedError = new Error(detailedMessage);
+      if (statusCode) {
+        (enhancedError as unknown as { statusCode?: number }).statusCode = statusCode;
+      }
+      if (errorCode) {
+        (enhancedError as unknown as { code?: string }).code = errorCode;
+      }
+      
+      throw enhancedError;
     }
 
     // Handle network or other errors
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     throw new Error(
-      `Failed to search businesses: ${error instanceof Error ? error.message : 'Unknown error'}`
+      `Failed to search businesses in event "${validatedInput.eventId}": ${errorMessage}`
     );
   }
 }

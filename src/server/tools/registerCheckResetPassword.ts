@@ -14,7 +14,7 @@ import { checkResetPassword } from '../../tools/checkResetPassword.js';
  */
 export function registerCheckResetPassword(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'checkResetPassword',
+    'initiate-password-reset-or-change',
     {
       title: 'Initiate Password Reset or Change',
       description:

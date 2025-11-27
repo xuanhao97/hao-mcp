@@ -17,7 +17,7 @@ export function registerSearchEvents(
   client: ArobidClient
 ): void {
   server.registerTool(
-    'searchEvents',
+    'search-active-exhibitions-and-events',
     {
       title: 'Search Active Exhibitions and Events',
       description:

@@ -44,7 +44,7 @@ const submitFormSchema = {
 
 export function registerSubmitEventForm(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'submitEventForm',
+    'submit-event-registration-or-order',
     {
       title: 'Submit Event Registration or Order',
       description:

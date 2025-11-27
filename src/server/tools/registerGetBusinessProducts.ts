@@ -9,7 +9,7 @@ import { getBusinessProducts } from '../../tools/getBusinessProducts.js';
 
 export function registerGetBusinessProducts(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getBusinessProducts',
+    'get-products-for-business-in-event',
     {
       title: 'Get Products for a Business in Event',
       description:

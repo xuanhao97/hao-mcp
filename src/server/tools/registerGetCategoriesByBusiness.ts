@@ -9,7 +9,7 @@ import { getCategoriesByBusiness } from '../../tools/getCategoriesByBusiness.js'
 
 export function registerGetCategoriesByBusiness(server: McpServer, client: ArobidClient): void {
   server.registerTool(
-    'getCategoriesByBusiness',
+    'get-categories-for-business-in-event',
     {
       title: 'Get Categories for a Business in Event',
       description:
