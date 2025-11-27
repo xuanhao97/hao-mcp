@@ -18,7 +18,7 @@ export function registerVerifyUser(server: McpServer, client: ArobidClient): voi
     {
       title: 'Verify Account with OTP Code',
       description:
-        'Verifies account with 6-digit OTP from email. Use after createPersonalAccount or userLogin. Required: userEmail, otp.',
+        'ONLY use this tool when registering a new user account. Verifies a newly registered account with the 6-digit OTP code sent to the user\'s email after calling register-new-user-account. This tool is specifically for account registration verification only. Do NOT use this for login verification. Required: userEmail, otp (6 digits from email).',
       inputSchema: {
         userEmail: z.string().email().describe('User email address (must be valid email format)'),
         otp: z
