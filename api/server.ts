@@ -110,6 +110,25 @@ function createHandlerWithClient(client: ArobidClient) {
 }
 
 /**
+ * Adds CORS headers to a response
+ */
+function addCorsHeaders(response: Response, request: Request): Response {
+  const origin = request.headers.get('origin') || '*';
+  const headers = new Headers(response.headers);
+
+  headers.set('Access-Control-Allow-Origin', origin);
+  headers.set('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+
+  headers.set('Access-Control-Allow-Credentials', 'true');
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+/**
  * Handles a request by creating a client from headers and creating a handler
  */
 async function handleRequest(request: Request) {
@@ -120,7 +139,10 @@ async function handleRequest(request: Request) {
   const handler = createHandlerWithClient(client);
 
   // Call the handler with the request
-  return handler(request);
+  const response = await handler(request);
+
+  // Add CORS headers to the response
+  return addCorsHeaders(response, request);
 }
 
 // Export handlers for GET, POST, and DELETE methods
@@ -137,5 +159,19 @@ export async function DELETE(request: Request) {
 }
 
 export async function OPTIONS(request: Request) {
-  return handleRequest(request);
+  // Get the origin from the request
+  const origin = request.headers.get('origin') || '*';
+
+  // Return CORS preflight response
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'Content-Type, Authorization, X-Arobid-Backend-Url, X-Arobid-Api-Key, X-Arobid-Tenant-Id',
+      'Access-Control-Max-Age': '86400', // 24 hours
+      'Access-Control-Allow-Credentials': 'true',
+    },
+  });
 }
