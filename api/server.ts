@@ -146,19 +146,19 @@ async function handleRequest(request: Request) {
 }
 
 // Export handlers for GET, POST, and DELETE methods
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<Response> {
   return handleRequest(request);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
   return handleRequest(request);
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: Request): Promise<Response> {
   return handleRequest(request);
 }
 
-export async function OPTIONS(request: Request) {
+export async function OPTIONS(request: Request): Promise<Response> {
   // Get the origin from the request
   const origin = request.headers.get('origin') || '*';
 

@@ -53,6 +53,18 @@ export class ArobidClient {
   }
 
   /**
+   * Builds the full URL from path
+   * If path is already a full URL (starts with http:// or https://), returns it as-is
+   * Otherwise, prepends the baseUrl
+   */
+  private buildUrl(path: string): string {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    return `${this.baseUrl}${path}`;
+  }
+
+  /**
    * Converts HTTP errors to ArobidError format
    */
   private async handleError(response: Response): Promise<ArobidError> {
@@ -66,13 +78,13 @@ export class ArobidClient {
         const apiMessage =
           (typeof errorBody.message === 'string' ? errorBody.message : null) ||
           (typeof errorBody.error === 'string' ? errorBody.error : null);
-        
+
         if (apiMessage) {
           errorMessage = `${apiMessage} (${statusDescription})`;
         } else {
           errorMessage = statusDescription;
         }
-        
+
         errorCode =
           (typeof errorBody.code === 'string' ? errorBody.code : null) ||
           (typeof errorBody.errorCode === 'string' ? errorBody.errorCode : null) ||
@@ -97,11 +109,11 @@ export class ArobidClient {
 
   /**
    * Performs a GET request
-   * @param path - The API path
+   * @param path - The API path or full URL
    * @param customHeaders - Optional custom headers to merge with default headers
    */
   async get<T>(path: string, customHeaders?: Record<string, string>): Promise<T> {
-    const url = `${this.baseUrl}${path}`;
+    const url = this.buildUrl(path);
     const headers = { ...this.getHeaders(), ...customHeaders };
     const response = await fetch(url, {
       method: 'GET',
@@ -117,18 +129,87 @@ export class ArobidClient {
 
   /**
    * Performs a POST request
-   * @param path - The API path
+   * @param path - The API path or full URL
    * @param data - The request body data
    * @param customHeaders - Optional custom headers to merge with default headers
    */
   async post<T>(path: string, data: unknown, customHeaders?: Record<string, string>): Promise<T> {
-    const url = `${this.baseUrl}${path}`;
+    const url = this.buildUrl(path);
     const headers = { ...this.getHeaders(), ...customHeaders };
+
+    const bodyString = JSON.stringify(data);
+
+    // Log request details
+    console.log('[DEBUG] POST Request:', {
+      url,
+      method: 'POST',
+      headers,
+      body: bodyString,
+    });
+
+    // Generate and log curl command for debugging
+    const curlHeaders = Object.entries(headers)
+      .map(([key, value]) => {
+        // Escape single quotes in header values
+        const escapedValue = value.replace(/'/g, "'\\''");
+        return `-H '${key}: ${escapedValue}'`;
+      })
+      .join(' ');
+
+    // Escape body for curl: replace single quotes and escape properly
+    const escapedBody = bodyString.replace(/'/g, "'\\''").replace(/\n/g, '\\n');
+    const curlCommand = `curl -X POST '${url}' ${curlHeaders} -d '${escapedBody}'`;
+    console.log('[DEBUG] Curl Command:', curlCommand);
+
     const response = await fetch(url, {
       method: 'POST',
       headers,
-      body: JSON.stringify(data),
+      body: bodyString,
     });
+
+    // Clone response for debugging so we don't consume the original body
+    const clonedResponse = response.clone();
+
+    // Log response details
+    const responseHeaders: Record<string, string> = {};
+    response.headers.forEach((value, key) => {
+      responseHeaders[key] = value;
+    });
+
+    try {
+      // Read as text first, then try to parse as JSON
+      const debugText = await clonedResponse.text();
+      let responseBody: unknown;
+      let isJson = false;
+
+      try {
+        responseBody = JSON.parse(debugText);
+        isJson = true;
+      } catch {
+        responseBody = debugText;
+        isJson = false;
+      }
+
+      console.log('[DEBUG] POST Response:', {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+        headers: responseHeaders,
+        body: responseBody,
+        bodyType: isJson ? 'JSON' : 'text',
+        bodyLength: debugText.length,
+      });
+    } catch (error) {
+      // If even text reading fails, log what we can
+      console.log('[DEBUG] POST Response (partial):', {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+        headers: responseHeaders,
+        error: 'Could not read response body',
+        errorMessage: error instanceof Error ? error.message : String(error),
+      });
+    }
 
     if (!response.ok) {
       throw await this.handleError(response);
@@ -140,12 +221,13 @@ export class ArobidClient {
   /**
    * Performs a POST request and returns the response body even if status is not ok
    * Useful for cases where error responses contain important information
+   * @param path - The API path or full URL
    */
   async postWithErrorBody<T>(
     path: string,
     data: unknown
   ): Promise<{ body: T; status: number; ok: boolean }> {
-    const url = `${this.baseUrl}${path}`;
+    const url = this.buildUrl(path);
     const response = await fetch(url, {
       method: 'POST',
       headers: this.getHeaders(),
@@ -162,9 +244,10 @@ export class ArobidClient {
 
   /**
    * Performs a PUT request
+   * @param path - The API path or full URL
    */
   async put<T>(path: string, data: unknown, customHeaders?: Record<string, string>): Promise<T> {
-    const url = `${this.baseUrl}${path}`;
+    const url = this.buildUrl(path);
     const response = await fetch(url, {
       method: 'PUT',
       headers: { ...this.getHeaders(), ...customHeaders },
@@ -180,9 +263,10 @@ export class ArobidClient {
 
   /**
    * Performs a PATCH request
+   * @param path - The API path or full URL
    */
   async patch<T>(path: string, data: unknown, customHeaders?: Record<string, string>): Promise<T> {
-    const url = `${this.baseUrl}${path}`;
+    const url = this.buildUrl(path);
     const response = await fetch(url, {
       method: 'PATCH',
       headers: { ...this.getHeaders(), ...customHeaders },
@@ -198,9 +282,10 @@ export class ArobidClient {
 
   /**
    * Performs a DELETE request
+   * @param path - The API path or full URL
    */
   async delete<T>(path: string, customHeaders?: Record<string, string>): Promise<T> {
-    const url = `${this.baseUrl}${path}`;
+    const url = this.buildUrl(path);
     const response = await fetch(url, {
       method: 'DELETE',
       headers: { ...this.getHeaders(), ...customHeaders },
