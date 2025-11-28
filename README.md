@@ -598,13 +598,87 @@ Then:
 
 ### Local Development with Vercel
 
-To test the Vercel integration locally:
+To test the Vercel integration locally, you can run the Vercel development server which mimics Vercel's serverless environment.
+
+#### Prerequisites
+
+1. **Install Vercel CLI** (if not already installed):
+
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Set up environment variables**:
+
+   Create a `.env` file in the project root (or use `.env.local`):
+
+   ```env
+   AROBID_BACKEND_URL=https://api.arobid.com
+   AROBID_API_KEY=your-api-key-here
+   AROBID_TENANT_ID=your-tenant-id
+   ```
+
+   **Note**: Environment variables can also be passed via request headers:
+   - `X-Arobid-Backend-Url`
+   - `X-Arobid-Api-Key`
+   - `X-Arobid-Tenant-Id`
+
+#### Running Locally
+
+**Option 1: Using npm script** (recommended):
 
 ```bash
-vercel dev
+npm run dev:vercel
 ```
 
-This will start a local server that mimics Vercel's serverless environment.
+**Option 2: Using Vercel CLI directly**:
+
+```bash
+vercel dev --listen 3001
+```
+
+This will:
+
+- Start a local development server at `http://localhost:3001`
+- Watch for file changes and reload automatically
+- Mimic Vercel's serverless environment
+- Use environment variables from `.env` or `.env.local`
+
+#### Accessing the MCP Server
+
+Once the server is running, the MCP endpoint will be available at:
+
+```
+http://localhost:3001/api/server
+```
+
+Or simply:
+
+```
+http://localhost:3001/
+```
+
+(based on the rewrite rule in `vercel.json`)
+
+#### Testing the Local Server
+
+You can test your local MCP server using the MCP Inspector:
+
+```bash
+npx @modelcontextprotocol/inspector@latest http://localhost:3001/api/server undefined
+```
+
+Or use curl to test:
+
+```bash
+curl http://localhost:3001/api/server
+```
+
+#### Troubleshooting
+
+- **Port already in use**: If port 3001 is already in use, you can change it by modifying the `--listen` flag in the `dev:vercel` script in `package.json`, or Vercel will automatically use the next available port
+- **Environment variables not loading**: Make sure `.env` or `.env.local` is in the project root
+- **Build errors**: Run `npm run build` first to ensure TypeScript compiles successfully
 
 ## API Endpoints
 
